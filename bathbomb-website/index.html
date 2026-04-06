@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mom's Bath Bombs — Handcrafted Luxury</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ═══ NAV ═══ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">Mom's Bath Bombs</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about"       data-section="about">About</a></li>
+        <li><a href="#products"    data-section="products">Shop</a></li>
+        <li><a href="#testimonials" data-section="testimonials">Reviews</a></li>
+        <li><a href="#contact"     data-section="contact" class="nav-cta">Order Now</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" id="cartCount" hidden>0</span>
+        </button>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ CART DRAWER ═══ -->
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">&#x2715;</button>
+    </div>
+    <div class="cart-body">
+      <div class="cart-empty" id="cartEmpty">
+        <p>&#x1F6C1;</p>
+        <p>Your cart is empty.</p>
+        <a href="#products" class="btn btn-primary" id="cartShopLink">Start Shopping</a>
+      </div>
+      <ul class="cart-items" id="cartItems" hidden></ul>
+    </div>
+    <div class="cart-footer" id="cartFooter" hidden>
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">$0.00</span>
+      </div>
+      <button class="btn btn-primary" style="width:100%">Checkout &rarr;</button>
+      <button class="cart-clear" id="cartClear">Clear cart</button>
+    </div>
+  </aside>
+
+  <main id="main">
+
+    <!-- ═══ HERO ═══ -->
+    <section id="hero">
+      <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
+      <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
+      <div class="hero-ring hero-ring-1" aria-hidden="true"></div>
+      <div class="hero-ring hero-ring-2" aria-hidden="true"></div>
+
+      <div class="hero-inner">
+        <div class="hero-content">
+          <p class="hero-eyebrow">Handcrafted with love</p>
+          <h1>Bathe like<br>it's your whole<br><em>personality.</em></h1>
+          <p class="hero-sub">Natural ingredients. Luxurious fizz.<br>A moment that's entirely yours.</p>
+          <div class="hero-btns">
+            <a href="#products" class="btn btn-light">Shop Bath Bombs</a>
+            <a href="#about" class="btn btn-outline-light">Our Story</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hv-ring"></div>
+          <div class="hv-badge">
+            <span class="hv-badge-num">6</span>
+            <span class="hv-badge-text">Signature<br>Scents</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true"><span></span></div>
+    </section>
+
+    <!-- ═══ MARQUEE ═══ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Natural</span><span class="sep">·</span>
+        <span>Handcrafted</span><span class="sep">·</span>
+        <span>Skin-Loving</span><span class="sep">·</span>
+        <span>SLS-Free</span><span class="sep">·</span>
+        <span>Cruelty-Free</span><span class="sep">·</span>
+        <span>Small Batch</span><span class="sep">·</span>
+        <span>Paraben-Free</span><span class="sep">·</span>
+        <span>Pure Botanicals</span><span class="sep">·</span>
+        <!-- duplicate for seamless loop -->
+        <span>Natural</span><span class="sep">·</span>
+        <span>Handcrafted</span><span class="sep">·</span>
+        <span>Skin-Loving</span><span class="sep">·</span>
+        <span>SLS-Free</span><span class="sep">·</span>
+        <span>Cruelty-Free</span><span class="sep">·</span>
+        <span>Small Batch</span><span class="sep">·</span>
+        <span>Paraben-Free</span><span class="sep">·</span>
+        <span>Pure Botanicals</span><span class="sep">·</span>
+      </div>
+    </div>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section id="about" class="section">
+      <div class="section-inner">
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p class="section-label">Our Story</p>
+            <h2>Made in small<br>batches, with<br>big heart.</h2>
+            <p>Every bath bomb starts with a simple belief — that you deserve a little luxury in the everyday. Our recipes have been perfected over years of passion for natural wellness, using only ingredients we'd put on our own skin.</p>
+            <p>No fillers, no shortcuts. Just pure, skin-loving goodness that turns an ordinary bath into a ritual.</p>
+            <a href="#products" class="btn btn-primary" style="margin-top:1rem">Explore the Collection</a>
+          </div>
+          <div class="about-right reveal reveal-delay">
+            <div class="about-stats">
+              <div class="stat-card">
+                <span class="stat-num">100%</span>
+                <span class="stat-label">Natural Ingredients</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-num">6+</span>
+                <span class="stat-label">Unique Scents</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-num">Small</span>
+                <span class="stat-label">Batch Crafted</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-num">0</span>
+                <span class="stat-label">Harsh Chemicals</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PRODUCTS ═══ -->
+    <section id="products" class="section section-tinted">
+      <div class="section-inner">
+        <div class="products-header reveal">
+          <div>
+            <p class="section-label">The Collection</p>
+            <h2>Find your perfect fizz.</h2>
+          </div>
+          <div class="filter-tabs" role="group" aria-label="Filter products">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="floral">Floral</button>
+            <button class="filter-btn" data-filter="citrus">Citrus</button>
+            <button class="filter-btn" data-filter="calming">Calming</button>
+            <button class="filter-btn" data-filter="moisturising">Moisturising</button>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+
+          <article class="product-card reveal"
+            data-name="Cherry Blossom" data-price="6.50"
+            data-tags="floral" style="--card-accent:#f48fb1;--card-bg:#fdeef5;">
+            <div class="card-visual">
+              <div class="card-icon">&#x1F338;</div>
+              <span class="card-badge">Bestseller</span>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <h3>Cherry Blossom</h3>
+                <span class="price">$6.50</span>
+              </div>
+              <p>A gentle floral blend of cherry blossom and sweet almond oil. Leaves skin silky soft.</p>
+              <button class="btn-add" aria-label="Add Cherry Blossom to cart">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="product-card reveal reveal-delay"
+            data-name="Citrus Burst" data-price="6.50"
+            data-tags="citrus" style="--card-accent:#ffb74d;--card-bg:#fff4e0;">
+            <div class="card-visual">
+              <div class="card-icon">&#x1F34B;</div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <h3>Citrus Burst</h3>
+                <span class="price">$6.50</span>
+              </div>
+              <p>Zesty lemon and orange peel extract for an energising, mood-lifting soak.</p>
+              <button class="btn-add" aria-label="Add Citrus Burst to cart">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="product-card reveal reveal-delay-2"
+            data-name="Lavender Dream" data-price="7.00"
+            data-tags="calming" style="--card-accent:#ba68c8;--card-bg:#f5eafa;">
+            <div class="card-visual">
+              <div class="card-icon">&#x1F4AB;</div>
+              <span class="card-badge">Fan Fave</span>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <h3>Lavender Dream</h3>
+                <span class="price">$7.00</span>
+              </div>
+              <p>Pure lavender essential oil with calming chamomile. Perfect for winding down at night.</p>
+              <button class="btn-add" aria-label="Add Lavender Dream to cart">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="product-card reveal"
+            data-name="Vanilla Bliss" data-price="7.00"
+            data-tags="moisturising" style="--card-accent:#f9a825;--card-bg:#fffae8;">
+            <div class="card-visual">
+              <div class="card-icon">&#x1F36C;</div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <h3>Vanilla Bliss</h3>
+                <span class="price">$7.00</span>
+              </div>
+              <p>Warm, sweet vanilla and coconut milk for a luxuriously moisturising experience.</p>
+              <button class="btn-add" aria-label="Add Vanilla Bliss to cart">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="product-card reveal reveal-delay"
+            data-name="Eucalyptus Spa" data-price="7.50"
+            data-tags="calming" style="--card-accent:#66bb6a;--card-bg:#edf7ee;">
+            <div class="card-visual">
+              <div class="card-icon">&#x1F331;</div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <h3>Eucalyptus Spa</h3>
+                <span class="price">$7.50</span>
+              </div>
+              <p>Refreshing eucalyptus and peppermint &mdash; like a spa retreat in your own bathroom.</p>
+              <button class="btn-add" aria-label="Add Eucalyptus Spa to cart">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="product-card reveal reveal-delay-2"
+            data-name="Rose &amp; Shea" data-price="8.00"
+            data-tags="floral moisturising" style="--card-accent:#e57373;--card-bg:#fde8ed;">
+            <div class="card-visual">
+              <div class="card-icon">&#x1F339;</div>
+              <span class="card-badge card-badge-gold">Premium</span>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <h3>Rose &amp; Shea</h3>
+                <span class="price">$8.00</span>
+              </div>
+              <p>Luxurious rose petals and shea butter for deep nourishment and a beautiful pink fizz.</p>
+              <button class="btn-add" aria-label="Add Rose &amp; Shea to cart">Add to Cart</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TESTIMONIALS ═══ -->
+    <section id="testimonials" class="section">
+      <div class="section-inner">
+        <div class="section-header reveal">
+          <p class="section-label">Happy Customers</p>
+          <h2>Words from people who love their baths.</h2>
+        </div>
+        <div class="testimonials-grid">
+
+          <div class="tcard reveal">
+            <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>"The Lavender Dream is absolutely divine. I've been sleeping so much better since I started using it before bed. Nothing artificial, just pure calm."</blockquote>
+            <div class="tcard-reviewer">
+              <span class="tcard-avatar">&#x1F469;</span>
+              <div>
+                <span class="tcard-name">Sarah M.</span>
+                <span class="tcard-verified">Verified buyer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tcard reveal reveal-delay">
+            <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>"Best gift I've ever given my mum. She loves the Rose &amp; Shea and Cherry Blossom — the whole bathroom smells incredible. Will absolutely reorder."</blockquote>
+            <div class="tcard-reviewer">
+              <span class="tcard-avatar">&#x1F9D1;</span>
+              <div>
+                <span class="tcard-name">James K.</span>
+                <span class="tcard-verified">Verified buyer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tcard reveal reveal-delay-2">
+            <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>"Finally bath bombs without that chemical smell. You can actually tell these are made with real ingredients. My skin has never felt better after a bath."</blockquote>
+            <div class="tcard-reviewer">
+              <span class="tcard-avatar">&#x1F469;&#x200D;&#x1F9B1;</span>
+              <div>
+                <span class="tcard-name">Priya L.</span>
+                <span class="tcard-verified">Verified buyer</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ INGREDIENTS ═══ -->
+    <section id="ingredients" class="section section-dark">
+      <div class="section-inner">
+        <div class="section-header reveal">
+          <p class="section-label section-label-light">Clean Beauty</p>
+          <h2 style="color:#fff">You'll recognise<br>every ingredient.</h2>
+        </div>
+        <div class="ingredients-grid">
+          <div class="ing-card reveal">
+            <div class="ing-icon">&#x1F9F4;</div>
+            <h4>Baking Soda &amp; Citric Acid</h4>
+            <p>The dynamic duo behind every satisfying fizz.</p>
+          </div>
+          <div class="ing-card reveal reveal-delay">
+            <div class="ing-icon">&#x1F965;</div>
+            <h4>Cold-Pressed Carrier Oils</h4>
+            <p>Coconut, sweet almond &amp; jojoba for silky skin.</p>
+          </div>
+          <div class="ing-card reveal reveal-delay-2">
+            <div class="ing-icon">&#x1F33F;</div>
+            <h4>Pure Essential Oils</h4>
+            <p>100% genuine — no synthetic fragrance substitutes.</p>
+          </div>
+          <div class="ing-card reveal">
+            <div class="ing-icon">&#x1F338;</div>
+            <h4>Natural Botanicals</h4>
+            <p>Dried flower petals and herbs for beauty &amp; calm.</p>
+          </div>
+          <div class="ing-card reveal reveal-delay">
+            <div class="ing-icon">&#x1F3A8;</div>
+            <h4>Cosmetic Colourants</h4>
+            <p>Skin-safe, vibrant colours that won't stain your tub.</p>
+          </div>
+          <div class="ing-card reveal reveal-delay-2">
+            <div class="ing-icon">&#x2728;</div>
+            <h4>No Nasties. Ever.</h4>
+            <p>Zero SLS, parabens, or synthetic fragrances. Promise.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section id="contact" class="section">
+      <div class="section-inner">
+        <div class="contact-wrap">
+          <div class="contact-info reveal">
+            <p class="section-label">Say Hello</p>
+            <h2>Let's make<br>something special.</h2>
+            <p>Want to place an order, request a custom scent blend, or gift a set to someone you love? Drop us a message.</p>
+            <ul class="contact-perks">
+              <li><span class="perk-dot"></span>Custom gift sets available</li>
+              <li><span class="perk-dot"></span>Bespoke scent blending</li>
+              <li><span class="perk-dot"></span>Bulk &amp; wholesale enquiries welcome</li>
+            </ul>
+          </div>
+          <form class="contact-form reveal reveal-delay" id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" />
+                <span class="field-error" id="nameError"></span>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" />
+                <span class="field-error" id="emailError"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="What's on your mind?" />
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" placeholder="Tell us what you're looking for..."></textarea>
+              <span class="field-error" id="messageError"></span>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Send Message &rarr;</button>
+            <p class="form-success" id="formSuccess" hidden>&#10003; Message sent! We'll be in touch soon.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <p class="footer-logo">Mom's Bath Bombs</p>
+          <p class="footer-tagline">Handcrafted with love &mdash; always.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="#about">About</a>
+          <a href="#products">Shop</a>
+          <a href="#testimonials">Reviews</a>
+          <a href="#ingredients">Ingredients</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Mom's Bath Bombs</p>
+        <p>Made with &#x2665; in small batches</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top" hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script>
+  (() => {
+    /* ─── CART STATE ─────────────────────────── */
+    let cart = [];
+    const cartTotal = () => cart.reduce((s,i) => s + i.price * i.qty, 0);
+    const cartCount = () => cart.reduce((s,i) => s + i.qty, 0);
+
+    function addItem(card) {
+      const name = card.dataset.name;
+      const price = parseFloat(card.dataset.price);
+      const icon  = card.querySelector('.card-icon').textContent.trim();
+      const found = cart.find(i => i.name === name);
+      found ? found.qty++ : cart.push({ name, price, icon, qty: 1 });
+      renderCart();
+      openCart();
+      flashBtn(card.querySelector('.btn-add'));
+    }
+
+    function removeItem(name) { cart = cart.filter(i => i.name !== name); renderCart(); }
+    function changeQty(name, d) {
+      const item = cart.find(i => i.name === name);
+      if (!item) return;
+      item.qty += d;
+      if (item.qty <= 0) removeItem(name); else renderCart();
+    }
+
+    window.__cart = { inc: n => changeQty(n,+1), dec: n => changeQty(n,-1), remove: removeItem };
+
+    function renderCart() {
+      const count   = cartCount();
+      const countEl = document.getElementById('cartCount');
+      countEl.textContent = count;
+      countEl.hidden = count === 0;
+
+      const itemsEl  = document.getElementById('cartItems');
+      const emptyEl  = document.getElementById('cartEmpty');
+      const footerEl = document.getElementById('cartFooter');
+      const subtotal = document.getElementById('cartSubtotal');
+
+      if (!cart.length) {
+        emptyEl.hidden = false; itemsEl.hidden = true; footerEl.hidden = true; return;
+      }
+      emptyEl.hidden = true; itemsEl.hidden = false; footerEl.hidden = false;
+      subtotal.textContent = '$' + cartTotal().toFixed(2);
+      itemsEl.innerHTML = cart.map(item => `
+        <li class="cart-item">
+          <span class="ci-icon">${item.icon}</span>
+          <div class="ci-info">
+            <span class="ci-name">${item.name}</span>
+            <span class="ci-price">$${(item.price * item.qty).toFixed(2)}</span>
+          </div>
+          <div class="ci-qty">
+            <button onclick="window.__cart.dec('${item.name}')" aria-label="Decrease">&#8722;</button>
+            <span>${item.qty}</span>
+            <button onclick="window.__cart.inc('${item.name}')" aria-label="Increase">&#43;</button>
+          </div>
+          <button class="ci-remove" onclick="window.__cart.remove('${item.name}')" aria-label="Remove">&#x2715;</button>
+        </li>`).join('');
+    }
+
+    /* ─── CART DRAWER ────────────────────────── */
+    const drawer  = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('overlay');
+
+    function openCart()  { drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); showOverlay(); document.body.style.overflow='hidden'; }
+    function closeCart() { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); if (!isNavOpen()) hideOverlay(); document.body.style.overflow=''; }
+
+    document.getElementById('cartBtn').addEventListener('click', openCart);
+    document.getElementById('cartClose').addEventListener('click', closeCart);
+    document.getElementById('cartClear').addEventListener('click', () => { cart=[]; renderCart(); });
+    document.getElementById('cartShopLink').addEventListener('click', closeCart);
+
+    /* ─── MOBILE NAV ─────────────────────────── */
+    const toggle   = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    const isNavOpen = () => navLinks.classList.contains('open');
+
+    function openNav()  { navLinks.classList.add('open'); toggle.classList.add('open'); toggle.setAttribute('aria-expanded','true');  showOverlay(); document.body.style.overflow='hidden'; }
+    function closeNav() { navLinks.classList.remove('open'); toggle.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); if (!drawer.classList.contains('open')) hideOverlay(); document.body.style.overflow=''; }
+
+    function showOverlay() { overlay.classList.add('show'); }
+    function hideOverlay() { overlay.classList.remove('show'); }
+
+    toggle.addEventListener('click', () => isNavOpen() ? closeNav() : openNav());
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+    overlay.addEventListener('click', () => { closeNav(); closeCart(); });
+
+    /* ─── NAVBAR: scroll + dark-hero ────────── */
+    const navbar = document.getElementById('navbar');
+    function updateNav() {
+      const hero = document.getElementById('hero');
+      const pastHero = window.scrollY > hero.offsetHeight - 100;
+      navbar.classList.toggle('scrolled',  window.scrollY > 60);
+      navbar.classList.toggle('on-dark',   !pastHero);
+      document.getElementById('backToTop').hidden = window.scrollY < 400;
+    }
+    window.addEventListener('scroll', updateNav, { passive:true });
+    updateNav();
+
+    /* ─── ACTIVE NAV SECTION ─────────────────── */
+    const sections   = document.querySelectorAll('section[id]');
+    const navAnchors = document.querySelectorAll('.nav-links a[data-section]');
+    new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) navAnchors.forEach(a => a.classList.toggle('active', a.dataset.section === e.target.id));
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' }).observe;
+    // Use individual observe calls
+    const secObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) navAnchors.forEach(a => a.classList.toggle('active', a.dataset.section === e.target.id));
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => secObs.observe(s));
+
+    /* ─── SCROLL REVEAL ──────────────────────── */
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    /* ─── PRODUCT CARDS ──────────────────────── */
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.querySelector('.btn-add').addEventListener('click', () => addItem(card));
+    });
+    function flashBtn(btn) {
+      btn.textContent = '✓ Added';
+      btn.classList.add('added');
+      setTimeout(() => { btn.textContent = 'Add to Cart'; btn.classList.remove('added'); }, 1600);
+    }
+
+    /* ─── FILTER TABS ────────────────────────── */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.product-card').forEach(card => {
+          const match = f === 'all' || (card.dataset.tags || '').includes(f);
+          card.classList.toggle('hidden-card', !match);
+        });
+      });
+    });
+
+    /* ─── FORM VALIDATION ────────────────────── */
+    const form = document.getElementById('contactForm');
+    function setErr(inputId, errId, msg) {
+      const el = document.getElementById(inputId);
+      document.getElementById(errId).textContent = msg;
+      el.classList.toggle('invalid', !!msg);
+      el.classList.toggle('valid',   !msg && el.value.trim() !== '');
+    }
+    const validateName    = () => { const v=document.getElementById('name').value.trim();  setErr('name','nameError', v?'':'Please enter your name.'); return !!v; };
+    const validateEmail   = () => { const v=document.getElementById('email').value.trim(); const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); setErr('email','emailError',!v?'Please enter your email.':!ok?'Enter a valid email.':''); return !!v&&ok; };
+    const validateMessage = () => { const v=document.getElementById('message').value.trim(); setErr('message','messageError',v.length>=10?'':'Please write at least 10 characters.'); return v.length>=10; };
+
+    document.getElementById('name').addEventListener('blur',    validateName);
+    document.getElementById('email').addEventListener('blur',   validateEmail);
+    document.getElementById('message').addEventListener('blur', validateMessage);
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!(validateName() & validateEmail() & validateMessage())) return;
+      const btn = document.getElementById('submitBtn');
+      const ok  = document.getElementById('formSuccess');
+      btn.textContent = 'Sending…'; btn.disabled = true;
+      setTimeout(() => {
+        btn.hidden = true; ok.hidden = false; form.reset();
+        form.querySelectorAll('input,textarea').forEach(el => el.classList.remove('valid','invalid'));
+        setTimeout(() => { btn.hidden=false; btn.disabled=false; btn.textContent='Send Message →'; ok.hidden=true; }, 5000);
+      }, 1000);
+    });
+
+    /* ─── BACK TO TOP ────────────────────────── */
+    document.getElementById('backToTop').addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+    renderCart();
+  })();
+  </script>
+
+</body>
+</html>
