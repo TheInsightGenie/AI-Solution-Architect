@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="940" viewBox="0 0 1320 940" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .box { rx:10; ry:10; stroke-width:1.6; }
+      .lab { font-size:13px; fill:#0f172a; }
+      .labb { font-size:14px; fill:#0f172a; font-weight:700; }
+      .note { font-size:11.5px; fill:#475569; }
+      .edge { stroke:#475569; stroke-width:1.8; fill:none; }
+      .edge-lab { font-size:11.5px; fill:#334155; font-weight:600; }
+      .title { font-size:22px; font-weight:700; fill:#0f172a; }
+      .sub { font-size:13px; fill:#475569; }
+      .hdr { font-size:15px; font-weight:700; fill:#0f172a; }
+      .risk { font-size:11.5px; fill:#b91c1c; font-weight:700; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1320" height="940" fill="#f8fafc"/>
+  <text x="30" y="36" class="title">3 - Credits Governance &amp; Cost Model</text>
+  <text x="30" y="58" class="sub">Three separate cost events, when each is charged, and the controls Ops needs to keep spend predictable.</text>
+
+  <!-- ===================== LEFT: THREE COST EVENTS ===================== -->
+  <text x="40" y="92" class="hdr">A. Three cost events (independent meters)</text>
+
+  <rect x="40" y="104" width="360" height="92" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="58" y="128" class="labb">1. Claude usage credits</text>
+  <text x="58" y="150" class="note">Charged per query (~$1). Always applies when the</text>
+  <text x="58" y="168" class="note">agent runs - separate from ZoomInfo entirely.</text>
+  <text x="58" y="186" class="note">Owner: Claude pilot budget.</text>
+
+  <rect x="40" y="206" width="360" height="120" class="box" fill="#fef3c7" stroke="#d97706"/>
+  <text x="58" y="230" class="labb">2. ZoomInfo AI action credits (research)</text>
+  <text x="58" y="252" class="note">Company research / list build. ~100 auto-granted</text>
+  <text x="58" y="270" class="note">each time a user connects an MCP.</text>
+  <text x="58" y="290" class="risk">RISK: currently effectively unlimited - ANY MCP</text>
+  <text x="58" y="306" class="risk">connect (even personal ChatGPT) hits shared pool.</text>
+  <text x="58" y="322" class="note">Action: ask ZoomInfo to cap default (e.g. 100/user).</text>
+
+  <rect x="40" y="336" width="360" height="120" class="box" fill="#bbf7d0" stroke="#15803d"/>
+  <text x="58" y="360" class="labb">3. ZoomInfo bulk credits (enrichment)</text>
+  <text x="58" y="382" class="note">Pulling contact detail (phone / email).</text>
+  <text x="58" y="402" class="note">1 credit per contact (1:1).</text>
+  <text x="58" y="422" class="note">5,000 allocated per pilot user, from 25,000 moved</text>
+  <text x="58" y="440" class="note">out of Simone's company bulk pool. Ops-managed.</text>
+
+  <!-- Funding note -->
+  <rect x="40" y="476" width="360" height="92" class="box" fill="#e2e8f0" stroke="#64748b"/>
+  <text x="58" y="500" class="labb">Funding (trial)</text>
+  <text x="58" y="522" class="note">Bucket A (Simone / data product + data lake)</text>
+  <text x="58" y="540" class="note">-&gt; Bucket B (pilot). "Steal from A to pay B."</text>
+  <text x="58" y="558" class="note">FY decision: chargeback model vs. drive adoption.</text>
+
+  <!-- ===================== CENTER: WILL THIS CHARGE? ===================== -->
+  <text x="470" y="92" class="hdr">B. "Will this action consume a credit?"</text>
+
+  <!-- start -->
+  <rect x="520" y="104" width="240" height="44" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="640" y="131" text-anchor="middle" class="lab">Broker action / agent step</text>
+
+  <!-- decision: action type -->
+  <polygon points="640,170 800,225 640,280 480,225" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.6"/>
+  <text x="640" y="220" text-anchor="middle" class="lab">What is being</text>
+  <text x="640" y="238" text-anchor="middle" class="lab">requested?</text>
+
+  <!-- branch: names/titles list -> free -->
+  <path class="edge" d="M480,225 H440 V330 H520" marker-end="url(#arrow)"/>
+  <text x="455" y="280" text-anchor="middle" class="edge-lab" transform="rotate(-90 455 280)">names / titles list</text>
+  <rect x="520" y="308" width="240" height="44" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="640" y="335" text-anchor="middle" class="lab">FREE - no credit</text>
+
+  <!-- branch: research -> ai action -->
+  <path class="edge" d="M640,280 V372" marker-end="url(#arrow)"/>
+  <text x="655" y="368" class="edge-lab">company research</text>
+  <rect x="520" y="372" width="240" height="44" class="box" fill="#fef3c7" stroke="#d97706"/>
+  <text x="640" y="399" text-anchor="middle" class="lab">AI action credit (meter 2)</text>
+
+  <!-- branch: contact detail -> dedup check -->
+  <path class="edge" d="M800,225 H840 V440 H760" marker-end="url(#arrow)"/>
+  <text x="855" y="330" text-anchor="middle" class="edge-lab" transform="rotate(-90 855 330)">contact detail (phone/email)</text>
+
+  <!-- dedup decision -->
+  <polygon points="640,420 810,475 640,530 470,475" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.6"/>
+  <text x="640" y="463" text-anchor="middle" class="lab">Already enriched at</text>
+  <text x="640" y="481" text-anchor="middle" class="lab">enterprise / managed-</text>
+  <text x="640" y="499" text-anchor="middle" class="lab">account level?</text>
+
+  <!-- yes -> reuse free -->
+  <path class="edge" d="M470,475 H430 V580 H520" marker-end="url(#arrow)"/>
+  <text x="445" y="528" text-anchor="middle" class="edge-lab" transform="rotate(-90 445 528)">yes - reuse</text>
+  <rect x="520" y="558" width="240" height="58" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="640" y="582" text-anchor="middle" class="lab">No charge - served from</text>
+  <text x="640" y="600" text-anchor="middle" class="note">managed package (watch delta charges)</text>
+
+  <!-- no -> bulk charge -->
+  <path class="edge" d="M640,530 V640" marker-end="url(#arrow)"/>
+  <text x="655" y="600" class="edge-lab">no - net new</text>
+  <rect x="500" y="640" width="280" height="76" class="box" fill="#bbf7d0" stroke="#15803d"/>
+  <text x="640" y="664" text-anchor="middle" class="labb">Bulk credit charged (meter 3)</text>
+  <text x="640" y="684" text-anchor="middle" class="note">Per-user via MCP -&gt; counts against THAT</text>
+  <text x="640" y="702" text-anchor="middle" class="note">user's 5,000. Same pull by another = charged again.</text>
+
+  <!-- open question -->
+  <rect x="500" y="736" width="280" height="64" class="box" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="640" y="758" text-anchor="middle" class="risk">OPEN: pull into CRM via MCP still</text>
+  <text x="640" y="776" text-anchor="middle" class="note">charges. Could we make one pull count</text>
+  <text x="640" y="792" text-anchor="middle" class="note">for everyone (enterprise visibility)?</text>
+
+  <!-- ===================== RIGHT: CONTROLS ===================== -->
+  <text x="880" y="92" class="hdr">C. Governance controls (Ops / IT)</text>
+
+  <rect x="880" y="104" width="400" height="70" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="900" y="128" class="labb">Cap AI action credits per user</text>
+  <text x="900" y="148" class="note">Request ZoomInfo: default 100 and stop, not</text>
+  <text x="900" y="166" class="note">unlimited. Can also cap manually per user today.</text>
+
+  <rect x="880" y="184" width="400" height="70" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="900" y="208" class="labb">Restrict connector visibility</text>
+  <text x="900" y="228" class="note">Gate the Slack/Claude app to a group. No credits</text>
+  <text x="900" y="246" class="note">assigned = enrichment is blocked automatically.</text>
+
+  <rect x="880" y="264" width="400" height="70" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="900" y="288" class="labb">Allocate bulk credits per pilot user</text>
+  <text x="900" y="308" class="note">5,000 each. Visible consumption per user; set</text>
+  <text x="900" y="326" class="note">hard caps so no single user drains the pool.</text>
+
+  <rect x="880" y="344" width="400" height="88" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="900" y="368" class="labb">Manage dedup at MDM / enterprise level</text>
+  <text x="900" y="388" class="note">Mass-enrich CRM accounts at company level so</text>
+  <text x="900" y="406" class="note">OneCap + Occupier asking the same question do</text>
+  <text x="900" y="424" class="note">not double-charge. Tie to ZoomInfo ID in Salesforce.</text>
+
+  <rect x="880" y="442" width="400" height="88" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="900" y="466" class="labb">Monitor &amp; decide (dual-path validation)</text>
+  <text x="900" y="486" class="note">Track consumption per cost event; collect before/</text>
+  <text x="900" y="504" class="note">after per user. Do NOT over-streamline out of the</text>
+  <text x="900" y="522" class="note">gate - measure, then curtail if needed.</text>
+
+  <rect x="880" y="540" width="400" height="100" class="box" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="900" y="564" class="labb">Pilot scope to decide</text>
+  <text x="900" y="586" class="note">- Industry CRM vs. Occupier CRM (or both)</text>
+  <text x="900" y="604" class="note">- Who gets access (start tiny: e.g. Joe)</text>
+  <text x="900" y="622" class="note">- Contacts open vs. closed; enrichment process</text>
+  <text x="900" y="636" class="note">- Sales OS vs. Copilot; does Slack bot reach ZoomInfo?</text>
+
+  <!-- footer note -->
+  <text x="40" y="600" class="note"> </text>
+  <text x="40" y="610" class="note"> </text>
+</svg>

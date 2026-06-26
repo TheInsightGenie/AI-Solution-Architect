@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1180" viewBox="0 0 960 1180" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .box { rx:12; ry:12; stroke-width:1.6; }
+      .lab { font-size:13px; fill:#0f172a; }
+      .labb { font-size:13px; fill:#0f172a; font-weight:700; }
+      .note { font-size:11.5px; fill:#475569; }
+      .edge { stroke:#475569; stroke-width:1.8; fill:none; }
+      .edge-lab { font-size:11.5px; fill:#334155; font-weight:600; }
+      .title { font-size:22px; font-weight:700; fill:#0f172a; }
+      .sub { font-size:13px; fill:#475569; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="1180" fill="#f8fafc"/>
+  <text x="30" y="36" class="title">2 - Broker User Experience (No / Minimal Training)</text>
+  <text x="30" y="58" class="sub">What the broker sees in Slack. Credits are only ever spent after an explicit "pull contact info" confirmation.</text>
+
+  <!-- EDGES -->
+  <path class="edge" d="M480,118 V150" marker-end="url(#arrow)"/>
+  <path class="edge" d="M480,232 V264" marker-end="url(#arrow)"/>
+  <path class="edge" d="M480,360 V392" marker-end="url(#arrow)"/>
+  <path class="edge" d="M480,474 V520" marker-end="url(#arrow)"/>
+  <!-- gate no -> revise -->
+  <path class="edge" d="M620,570 H800 V330 H700" marker-end="url(#arrow)"/>
+  <text x="812" y="455" text-anchor="middle" class="edge-lab" transform="rotate(-90 812 455)">no - refine list, no spend</text>
+  <!-- gate yes -> enrich -->
+  <path class="edge" d="M480,620 V660" marker-end="url(#arrow)"/>
+  <text x="495" y="645" class="edge-lab">yes - selected contacts only</text>
+  <!-- enrich -> call -->
+  <path class="edge" d="M480,728 V770" marker-end="url(#arrow)"/>
+  <!-- call -> success? -->
+  <path class="edge" d="M480,838 V880" marker-end="url(#arrow)"/>
+  <!-- success yes -> notes/SF -->
+  <path class="edge" d="M480,980 V1020" marker-end="url(#arrow)"/>
+  <text x="495" y="1005" class="edge-lab">yes</text>
+  <!-- success no -> keep in slack list -->
+  <path class="edge" d="M620,930 H820 V1050 H760" marker-end="url(#arrow)"/>
+  <text x="832" y="990" text-anchor="middle" class="edge-lab" transform="rotate(-90 832 990)">no - keep in list</text>
+
+  <!-- NODES -->
+  <!-- 1 ask -->
+  <rect x="280" y="80" width="400" height="38" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="480" y="104" text-anchor="middle" class="lab">1. "Show me contacts I can call with these demographics"</text>
+
+  <!-- 2 multi-source build -->
+  <rect x="230" y="150" width="500" height="82" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="480" y="174" text-anchor="middle" class="labb">2. Slack bot builds candidate list - multi-source</text>
+  <text x="480" y="194" text-anchor="middle" class="note">ZoomInfo search - Salesforce - LinkedIn / Sales Navigator - Rhetorik - 10-K filings</text>
+  <text x="480" y="212" text-anchor="middle" class="note">Agent compares freshness &amp; flags conflicts. No bulk credits used yet.</text>
+
+  <!-- 3 slack list -->
+  <rect x="250" y="264" width="460" height="96" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="480" y="288" text-anchor="middle" class="labb">3. Returns a Slack list (pre-Salesforce)</text>
+  <text x="480" y="308" text-anchor="middle" class="note">Each row: name - title - SOURCE - confidence level</text>
+  <text x="480" y="328" text-anchor="middle" class="note">Matching sources raise confidence; conflicts lower it.</text>
+  <text x="480" y="348" text-anchor="middle" class="note">FREE: list only, no contact details pulled.</text>
+
+  <!-- 4 select -->
+  <rect x="300" y="392" width="360" height="82" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="480" y="418" text-anchor="middle" class="labb">4. Broker selects who to reach</text>
+  <text x="480" y="438" text-anchor="middle" class="note">pick a subset instead of enriching everyone</text>
+  <text x="480" y="456" text-anchor="middle" class="note">(the step that protects credit spend)</text>
+
+  <!-- 5 gate diamond -->
+  <polygon points="480,500 660,570 480,640 300,570" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.6"/>
+  <text x="480" y="562" text-anchor="middle" class="labb">5. Confirm: pull contact</text>
+  <text x="480" y="582" text-anchor="middle" class="lab">info? (uses credits)</text>
+
+  <!-- 6 enrich -->
+  <rect x="280" y="660" width="400" height="68" class="box" fill="#bbf7d0" stroke="#15803d"/>
+  <text x="480" y="686" text-anchor="middle" class="labb">6. Enrich selected contacts</text>
+  <text x="480" y="706" text-anchor="middle" class="note">phone + email - bulk credit, 1 per contact</text>
+
+  <!-- 7 call -->
+  <rect x="320" y="770" width="320" height="68" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="480" y="796" text-anchor="middle" class="labb">7. Broker makes the call</text>
+  <text x="480" y="816" text-anchor="middle" class="note">cold call / outreach</text>
+
+  <!-- 8 success? -->
+  <polygon points="480,880 640,930 480,980 320,930" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.6"/>
+  <text x="480" y="935" text-anchor="middle" class="labb">8. Good conversation?</text>
+
+  <!-- 9 notes + SF -->
+  <rect x="280" y="1020" width="400" height="68" class="box" fill="#cffafe" stroke="#0891b2"/>
+  <text x="480" y="1046" text-anchor="middle" class="labb">9. Document notes -&gt; auto-create in Salesforce</text>
+  <text x="480" y="1066" text-anchor="middle" class="note">contact written to CRM with ZoomInfo ID</text>
+
+  <!-- keep in list end -->
+  <rect x="700" y="1030" width="120" height="40" class="box" fill="#e2e8f0" stroke="#64748b"/>
+  <text x="760" y="1054" text-anchor="middle" class="note">stays in Slack list</text>
+</svg>

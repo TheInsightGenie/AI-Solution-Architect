@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="1120" viewBox="0 0 1250 1120" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .lane-div { stroke:#cbd5e1; stroke-width:1; stroke-dasharray:4 4; }
+      .lane-hdr { font-size:14px; font-weight:700; fill:#0f172a; }
+      .box { rx:10; ry:10; stroke-width:1.5; }
+      .lab { font-size:12.5px; fill:#0f172a; }
+      .lab-w { font-size:12.5px; fill:#ffffff; font-weight:600; }
+      .note { font-size:11px; fill:#475569; font-style:italic; }
+      .edge { stroke:#475569; stroke-width:1.8; fill:none; }
+      .edge-lab { font-size:11px; fill:#334155; font-weight:600; }
+      .title { font-size:22px; font-weight:700; fill:#0f172a; }
+      .sub { font-size:13px; fill:#475569; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1250" height="1120" fill="#f8fafc"/>
+  <text x="30" y="36" class="title">1 - End-to-End Flow (Stakeholder View)</text>
+  <text x="30" y="58" class="sub">Broker query in Slack/Claude through ZoomInfo, Salesforce and credit governance. Free search vs. paid contact enrichment.</text>
+
+  <!-- Lane header band -->
+  <rect x="10" y="72" width="1230" height="34" fill="#e2e8f0" rx="6"/>
+  <text x="125"  y="94" text-anchor="middle" class="lane-hdr">Broker (User)</text>
+  <text x="375"  y="94" text-anchor="middle" class="lane-hdr">Slack Bot / Claude Agent</text>
+  <text x="625"  y="94" text-anchor="middle" class="lane-hdr">ZoomInfo (MCP)</text>
+  <text x="875"  y="94" text-anchor="middle" class="lane-hdr">Salesforce</text>
+  <text x="1125" y="94" text-anchor="middle" class="lane-hdr">Credits Manager (Ops)</text>
+
+  <!-- Lane dividers -->
+  <line x1="250"  y1="106" x2="250"  y2="1100" class="lane-div"/>
+  <line x1="500"  y1="106" x2="500"  y2="1100" class="lane-div"/>
+  <line x1="750"  y1="106" x2="750"  y2="1100" class="lane-div"/>
+  <line x1="1000" y1="106" x2="1000" y2="1100" class="lane-div"/>
+
+  <!-- ============ EDGES (drawn first, under nodes) ============ -->
+  <!-- A start -> classify -->
+  <path class="edge" d="M230,150 H270" marker-end="url(#arrow)"/>
+  <!-- classify -> data path decision -->
+  <path class="edge" d="M375,180 V230" marker-end="url(#arrow)"/>
+  <!-- data path: cache/SF hit (left) -> return -->
+  <path class="edge" d="M270,300 H160 V760 H270" marker-end="url(#arrow)"/>
+  <text x="150" y="500" text-anchor="middle" class="edge-lab" transform="rotate(-90 150 500)">cache / managed account hit - no credit</text>
+  <!-- data path: ZoomInfo needed -> research/contact decision -->
+  <path class="edge" d="M375,340 V410" marker-end="url(#arrow)"/>
+  <text x="390" y="378" class="edge-lab">ZoomInfo needed</text>
+  <!-- research branch -> ZoomInfo research -->
+  <path class="edge" d="M480,450 H520" marker-end="url(#arrow)"/>
+  <text x="500" y="440" text-anchor="middle" class="edge-lab">research</text>
+  <!-- ZoomInfo research -> check AI action credit cap -->
+  <path class="edge" d="M730,450 H1020" marker-end="url(#arrow)"/>
+  <text x="875" y="440" text-anchor="middle" class="edge-lab">AI action credit (~research)</text>
+  <!-- research result back to return-to-slack -->
+  <path class="edge" d="M625,480 V672 H375 V700" marker-end="url(#arrow)"/>
+  <!-- contact branch -> confirm gate -->
+  <path class="edge" d="M375,490 V560 H230" marker-end="url(#arrow)"/>
+  <text x="300" y="545" text-anchor="middle" class="edge-lab">contact info</text>
+  <!-- confirm gate yes -> check bulk allocation -->
+  <path class="edge" d="M125,620 V690 H1125 V700" marker-end="url(#arrow)"/>
+  <text x="560" y="684" text-anchor="middle" class="edge-lab">confirm = yes</text>
+  <!-- confirm gate no -> end -->
+  <path class="edge" d="M125,620 V650 H40 V440 H120" marker-end="url(#arrow)"/>
+  <text x="60" y="545" text-anchor="middle" class="edge-lab" transform="rotate(-90 60 545)">no - cancel</text>
+  <!-- check allocation -> credits available? -->
+  <path class="edge" d="M1125,740 V800" marker-end="url(#arrow)"/>
+  <!-- credits available no -> block -->
+  <path class="edge" d="M1125,880 V910" marker-end="url(#arrow)"/>
+  <text x="1150" y="901" class="edge-lab">no</text>
+  <!-- credits available yes -> ZoomInfo enrichment -->
+  <path class="edge" d="M1010,840 H690 V760" marker-end="url(#arrow)"/>
+  <text x="800" y="832" text-anchor="middle" class="edge-lab">yes</text>
+  <!-- enrichment (bulk) -> return to slack -->
+  <path class="edge" d="M520,730 H480" marker-end="url(#arrow)"/>
+  <!-- return to slack -> salesforce -->
+  <path class="edge" d="M480,760 H760" marker-end="url(#arrow)"/>
+  <text x="620" y="750" text-anchor="middle" class="edge-lab">create / stage record</text>
+  <!-- enrichment -> log consumption -->
+  <path class="edge" d="M560,760 V1010 H1020" marker-end="url(#arrow)"/>
+  <text x="800" y="1003" text-anchor="middle" class="edge-lab">consumption event -&gt; log</text>
+
+  <!-- ============ NODES ============ -->
+  <!-- Broker lane -->
+  <rect x="20" y="120" width="210" height="60" class="box" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="125" y="146" text-anchor="middle" class="lab">Broker asks in Slack / Claude</text>
+  <text x="125" y="164" text-anchor="middle" class="note">"show me CFOs I can call..."</text>
+
+  <!-- confirm gate diamond -->
+  <polygon points="125,540 245,580 125,620 5,580" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+  <text x="125" y="576" text-anchor="middle" class="lab">Confirm bulk</text>
+  <text x="125" y="592" text-anchor="middle" class="lab">credit spend?</text>
+
+  <!-- cancel end -->
+  <rect x="20" y="415" width="200" height="50" class="box" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="120" y="445" text-anchor="middle" class="lab">Cancelled - no spend</text>
+
+  <!-- Agent lane -->
+  <rect x="270" y="120" width="210" height="60" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="375" y="146" text-anchor="middle" class="lab">Classify intent:</text>
+  <text x="375" y="164" text-anchor="middle" class="lab">research vs. enrichment</text>
+
+  <polygon points="375,230 495,285 375,340 255,285" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="375" y="280" text-anchor="middle" class="lab">Choose data path</text>
+  <text x="375" y="296" text-anchor="middle" class="note">cache / SF / ZoomInfo</text>
+
+  <polygon points="375,410 495,450 375,490 255,450" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="375" y="446" text-anchor="middle" class="lab">Research or</text>
+  <text x="375" y="462" text-anchor="middle" class="lab">contact info?</text>
+
+  <rect x="270" y="700" width="210" height="60" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="375" y="724" text-anchor="middle" class="lab">Return list to Slack:</text>
+  <text x="375" y="742" text-anchor="middle" class="note">name, title, SOURCE, confidence</text>
+
+  <!-- ZoomInfo lane -->
+  <rect x="520" y="420" width="210" height="60" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="625" y="444" text-anchor="middle" class="lab">ZoomInfo research / list</text>
+  <text x="625" y="462" text-anchor="middle" class="note">names+titles, list build</text>
+
+  <rect x="520" y="700" width="210" height="60" class="box" fill="#bbf7d0" stroke="#15803d"/>
+  <text x="625" y="724" text-anchor="middle" class="lab">Contact enrichment</text>
+  <text x="625" y="742" text-anchor="middle" class="note">bulk credit - 1 credit / contact</text>
+
+  <!-- Salesforce lane -->
+  <rect x="770" y="730" width="210" height="60" class="box" fill="#cffafe" stroke="#0891b2"/>
+  <text x="875" y="754" text-anchor="middle" class="lab">Create / update record</text>
+  <text x="875" y="772" text-anchor="middle" class="note">or stage for review (ZoomInfo ID)</text>
+
+  <!-- Credits Manager lane -->
+  <rect x="1020" y="700" width="210" height="44" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="1125" y="727" text-anchor="middle" class="lab">Check bulk credit allocation</text>
+
+  <polygon points="1125,800 1245,840 1125,880 1005,840" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="1125" y="845" text-anchor="middle" class="lab">Credits available?</text>
+
+  <rect x="1020" y="420" width="210" height="44" class="box" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="1125" y="447" text-anchor="middle" class="lab">Check AI action credit cap</text>
+
+  <rect x="1020" y="910" width="210" height="44" class="box" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="1125" y="937" text-anchor="middle" class="lab">Block + notify Ops / user</text>
+
+  <rect x="1020" y="990" width="210" height="60" class="box" fill="#fed7aa" stroke="#c2410c"/>
+  <text x="1125" y="1016" text-anchor="middle" class="lab">Log usage / consumption,</text>
+  <text x="1125" y="1034" text-anchor="middle" class="note">track totals, threshold alerts</text>
+
+  <!-- Legend -->
+  <rect x="20" y="1050" width="14" height="14" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="40" y="1062" class="note">green = no/low cost (search)</text>
+  <rect x="250" y="1050" width="14" height="14" fill="#bbf7d0" stroke="#15803d"/>
+  <text x="270" y="1062" class="note">dark green = bulk credit spend</text>
+  <rect x="520" y="1050" width="14" height="14" fill="#fef9c3" stroke="#ca8a04"/>
+  <text x="540" y="1062" class="note">yellow = human confirmation gate</text>
+  <rect x="800" y="1050" width="14" height="14" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="820" y="1062" class="note">orange = credit governance / ops</text>
+</svg>
