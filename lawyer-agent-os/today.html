@@ -281,13 +281,119 @@ a:hover{text-decoration:underline;}
 .fb-llm{background:var(--accent-sf);}
 .fb-code{background:var(--ok-sf);}
 
+/* ══════ CHARTS ══════
+   Every chart here is a single series: magnitude is carried by bar length, not by hue.
+   That is deliberate -- the status red and amber in this token set sit too close in
+   normal vision to be told apart as adjacent fills, so they are never used that way.
+   Status colour appears only on labelled pills, never as the sole carrier of meaning. */
+.chart-wrap{overflow-x:auto;}
+.chart{display:block; width:100%; height:auto;}
+.ch-grid{stroke:var(--line-2); stroke-width:1;}
+.ch-base{stroke:var(--line); stroke-width:1;}
+.ch-axis{fill:var(--faint); font-family:var(--mono); font-size:9px;}
+.ch-val{fill:var(--slate); font-family:var(--mono); font-size:10px; font-variant-numeric:tabular-nums;}
+.ch-lbl{fill:var(--mute); font-size:10.5px;}
+.ch-bar{transition:opacity var(--t); cursor:default;}
+.ch-bar:hover{opacity:.75;}
+
+.hero-n{font-family:var(--serif); font-size:36px; line-height:1; font-weight:600; font-variant-numeric:tabular-nums;}
+.hero-l{font-size:12px; color:var(--mute); margin-top:.3rem;}
+
+/* Coverage: a part-to-whole where the empty portion is the message. */
+.cov{display:flex; height:36px; border-radius:var(--radius-sm); background:var(--line-2); overflow:hidden; border:1px solid var(--line);}
+.cov-read{background:var(--accent); display:flex; align-items:center; padding:0 .55rem; color:#fff; font-family:var(--mono); font-size:10.5px; white-space:nowrap; border-right:2px solid var(--white);}
+.cov-rest{flex:1; display:flex; align-items:center; padding:0 .55rem; font-family:var(--mono); font-size:10.5px; color:var(--slate);}
+.cov-key{display:flex; gap:1rem; margin-top:.55rem; flex-wrap:wrap; font-size:11.5px; color:var(--mute);}
+.cov-key span{display:inline-flex; align-items:center; gap:.35rem;}
+.swatch{width:9px; height:9px; border-radius:2px; flex:none; border:1px solid rgba(18,22,28,.12);}
+
+.meter{height:8px; border-radius:5px; background:var(--line-2); overflow:hidden; margin-top:.5rem;}
+.meter span{display:block; height:100%; background:var(--accent); border-radius:5px;}
+
+.rank{display:flex; gap:.7rem; align-items:center; padding:.55rem 1rem; border-bottom:1px solid var(--line-2);}
+.rank:last-child{border-bottom:0;}
+.rank-n{font-family:var(--mono); font-size:10px; color:var(--faint); width:16px; flex:none;}
+.rank-body{flex:1; min-width:0;}
+.rank-t{display:block; font-size:12.5px; font-weight:500;}
+.rank-s{display:block; font-size:11px; color:var(--mute); margin-top:.1rem;}
+.rank-v{font-family:var(--mono); font-size:12px; font-variant-numeric:tabular-nums; flex:none; text-align:right;}
+
+.tip{
+  position:fixed; z-index:200; background:var(--ink); color:#fff; font-family:var(--mono);
+  font-size:11px; padding:.35rem .55rem; border-radius:var(--radius-sm);
+  pointer-events:none; opacity:0; transition:opacity .12s; white-space:nowrap;
+}
+.tip.show{opacity:1;}
+
+/* ══════ OUTLOOK ══════ */
+.scope{display:flex; gap:.5rem; align-items:flex-start; font-size:12px; color:var(--slate); padding:.22rem 0;}
+.scope-ico{flex:none; width:13px; text-align:center; font-size:10px; color:var(--ok); padding-top:1px;}
+.scope-no .scope-ico{color:var(--stop);}
+
+.mail{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--white);}
+.mail-head{padding:.7rem .9rem; border-bottom:1px solid var(--line-2); background:var(--paper-2);}
+.mail-sub{font-size:13.5px; font-weight:600;}
+.mail-meta{font-family:var(--mono); font-size:10px; color:var(--faint); margin-top:.25rem;}
+.mail-body{padding:.9rem;}
+.mail-item{display:flex; gap:.65rem; padding:.55rem 0; border-bottom:1px solid var(--line-2); align-items:flex-start;}
+.mail-item:last-child{border-bottom:0;}
+.mail-tag{font-family:var(--mono); font-size:9px; padding:1px 5px; border-radius:3px; flex:none; margin-top:.15rem;}
+.mail-foot{padding:.65rem .9rem; border-top:1px dashed var(--line); background:var(--paper-2); font-size:11.5px; color:var(--mute);}
+
+.cal{display:flex; gap:.65rem; padding:.55rem 1rem; border-bottom:1px solid var(--line-2); align-items:center;}
+.cal:last-child{border-bottom:0;}
+.cal-date{font-family:var(--mono); font-size:10px; text-align:center; flex:none; width:38px; border:1px solid var(--line); border-radius:var(--radius-sm); padding:2px 0; background:var(--paper-2);}
+.cal-date b{display:block; font-size:13px; color:var(--ink);}
+
+/* ══════ ASK / AGENTS ══════ */
+.ask-wrap{display:grid; grid-template-columns:1fr 270px; gap:1rem; align-items:start;}
+.thread{padding:1rem; display:flex; flex-direction:column; gap:1.1rem;}
+.msg{display:flex; gap:.7rem; align-items:flex-start;}
+.msg-av{width:26px; height:26px; border-radius:var(--radius-sm); flex:none; display:grid; place-items:center; font-size:10px; font-weight:600; font-family:var(--mono);}
+.msg-user .msg-av{background:var(--ink); color:#fff;}
+.msg-agent .msg-av{background:var(--accent); color:#fff;}
+.msg-body{flex:1; min-width:0; font-size:13px;}
+.msg-who{font-family:var(--mono); font-size:10.5px; color:var(--mute); margin-bottom:.35rem;}
+.msg-user .msg-body p{background:var(--paper); border:1px solid var(--line-2); padding:.55rem .75rem; border-radius:var(--radius); display:inline-block;}
+.msg-agent .msg-body{color:var(--slate);}
+.msg-agent .msg-body strong{color:var(--ink);}
+
+/* The routing trace: which agent answered, what it touched, what it cost. */
+.route{display:flex; gap:.4rem; align-items:center; flex-wrap:wrap; padding:.4rem .55rem; background:var(--paper); border:1px solid var(--line-2); border-radius:var(--radius-sm); margin-bottom:.6rem; font-family:var(--mono); font-size:10px;}
+.route-step{display:inline-flex; align-items:center; gap:.3rem; padding:1px 7px; border-radius:20px; border:1px solid var(--line); background:var(--white); color:var(--slate);}
+.route-db{background:var(--ok-sf); border-color:#bfdccd; color:var(--ok);}
+.route-doc{background:var(--accent-sf); border-color:#c5d6ef; color:var(--accent);}
+.route-gen{background:var(--paper-2); border-color:var(--line); color:var(--slate);}
+.route-cost{margin-left:auto; color:var(--faint);}
+.route-arrow{color:var(--faint);}
+
+.ans-tbl{width:100%; border-collapse:collapse; font-size:12px; margin:.5rem 0; font-variant-numeric:tabular-nums;}
+.ans-tbl th{text-align:left; font-family:var(--mono); font-size:9px; letter-spacing:.07em; text-transform:uppercase; color:var(--mute); font-weight:500; padding:.35rem .5rem; border-bottom:1px solid var(--line);}
+.ans-tbl td{padding:.4rem .5rem; border-bottom:1px solid var(--line-2);}
+.ans-tbl tr:last-child td{border-bottom:0;}
+
+.agent-row{display:flex; gap:.6rem; padding:.55rem 1rem; border-bottom:1px solid var(--line-2); align-items:flex-start;}
+.agent-row:last-child{border-bottom:0;}
+.agent-n{display:block; font-size:12.5px; font-weight:500;}
+.agent-d{display:block; font-size:11px; color:var(--mute); margin-top:.1rem;}
+.agent-c{font-family:var(--mono); font-size:10px; flex:none; text-align:right; color:var(--faint);}
+
+.model-pick{display:flex; gap:.3rem; padding:.6rem 1rem;}
+.model-btn{flex:1; padding:.4rem; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--white); font-size:11.5px; color:var(--slate); transition:border-color var(--t),background var(--t);}
+.model-btn[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-sf); color:var(--accent); font-weight:500;}
+
+.composer{display:flex; gap:.5rem; padding:.8rem 1rem; border-top:1px solid var(--line-2); background:var(--paper-2); border-radius:0 0 var(--radius) var(--radius);}
+.composer-input{flex:1; border:1px solid var(--line); border-radius:var(--radius-sm); padding:.5rem .7rem; font:inherit; font-size:12.5px; background:var(--white); color:var(--ink);}
+.suggest{display:block; width:100%; text-align:left; padding:.5rem .6rem; font-size:12px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--white); color:var(--slate); margin-bottom:.4rem; transition:border-color var(--t),color var(--t);}
+.suggest:hover{border-color:var(--accent); color:var(--ink);}
+
 /* ══════ TOAST ══════ */
 .toast{position:fixed; left:50%; bottom:1.4rem; transform:translate(-50%,140%); z-index:150; background:var(--ink); color:#fff; font-size:12.5px; padding:.6rem 1rem; border-radius:var(--radius); box-shadow:var(--sh-lg); transition:transform .26s ease; max-width:88vw;}
 .toast.show{transform:translate(-50%,0);}
 
 /* ══════ RESPONSIVE ══════ */
 @media (max-width:1080px){
-  .trace{grid-template-columns:1fr;}
+  .trace,.ask-wrap{grid-template-columns:1fr;}
   .g-4,.g-3{grid-template-columns:repeat(2,1fr);}
 }
 @media (max-width:860px){
@@ -334,6 +440,19 @@ a:hover{text-decoration:underline;}
         </button>
         <button class="nav-item" role="tab" data-screen="horizon" aria-selected="false">
           <span class="nav-ico" aria-hidden="true">&#9636;</span> Horizon
+        </button>
+        <button class="nav-item" role="tab" data-screen="ask" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9679;</span> Ask
+        </button>
+      </div>
+      <div class="nav-label">Oversight</div>
+      <div role="tablist" aria-orientation="vertical">
+        <button class="nav-item" role="tab" data-screen="dashboard" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9638;</span> Dashboard
+        </button>
+        <button class="nav-item" role="tab" data-screen="outlook" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9993;</span> Outlook
+          <span class="nav-count">12</span>
         </button>
       </div>
       <div class="nav-label">Sources</div>
@@ -541,6 +660,7 @@ a:hover{text-decoration:underline;}
                 <span class="conf"><span class="conf-bar"><i style="width:95%"></i></span> 95%</span>
                 <span>&middot;</span>
                 <span>&pound;1.9m annual rent at stake</span>
+                <span class="pill pill-ok" style="cursor:pointer;" data-goto="outlook"><span class="dot"></span> In your calendar</span>
               </div>
               <div class="task-acts">
                 <button class="btn btn-sm btn-primary" data-done>Mark done</button>
@@ -705,6 +825,503 @@ a:hover{text-decoration:underline;}
           <div class="card-note">
             Rolling contracts are re-projected on every sweep. An agreement that renewed last year
             still generates this year&rsquo;s notice deadline &mdash; the case that most often gets missed.
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ DASHBOARD (risk partner) ══════ -->
+      <section class="screen" id="screen-dashboard" data-title="Oversight / Dashboard" hidden>
+        <div class="screen-head">
+          <h1>Practice oversight</h1>
+          <p>For the risk partner, not the fee earner &mdash; who already has Today. The number that
+             matters here is not how much we tracked. It is how much we haven&rsquo;t read.</p>
+        </div>
+
+        <!-- Coverage: the hero metric -->
+        <div class="card" style="margin-bottom:1rem;">
+          <div class="card-head">
+            <h3>Contract coverage</h3>
+            <span class="pill pill-stop"><span class="dot"></span> 265 with unknown obligations</span>
+          </div>
+          <div class="card-body">
+            <div class="row wrap" style="gap:2.5rem; align-items:flex-end; margin-bottom:.9rem;">
+              <div><div class="hero-n">47</div><div class="hero-l">contracts read</div></div>
+              <div><div class="hero-n" style="color:var(--mute);">312</div><div class="hero-l">in the document system</div></div>
+              <div><div class="hero-n" style="color:var(--stop);">15%</div><div class="hero-l">coverage</div></div>
+            </div>
+            <div class="cov">
+              <div class="cov-read" style="width:15.06%;">47 read</div>
+              <div class="cov-rest">265 unread &mdash; obligations unknown</div>
+            </div>
+            <div class="cov-key">
+              <span><span class="swatch" style="background:var(--accent);"></span> Read &amp; tracked</span>
+              <span><span class="swatch" style="background:var(--line-2);"></span> Not yet read</span>
+            </div>
+          </div>
+          <div class="card-note">
+            The risk is not the deadlines on the Today screen &mdash; those are handled. It is the 265
+            agreements nobody has opened, any of which may carry a notice period running against us.
+            At the current rate this closes in eleven weeks.
+          </div>
+        </div>
+
+        <div class="grid g-2" style="align-items:start; margin-bottom:1rem;">
+
+          <!-- Missed deadlines over time -->
+          <div class="card">
+            <div class="card-head"><h3>Missed deadlines</h3><span class="eyebrow">Rolling 12 months</span></div>
+            <div class="card-body">
+              <div class="chart-wrap">
+                <svg class="chart" viewBox="0 0 560 190" role="img" aria-label="Column chart of missed deadlines by month. Sep 2, Oct 3, Nov 1, Dec 2, Jan 1, Feb 2, Mar 0, Apr 1, May 0, Jun 0, Jul 2, Aug 0.">
+                  <g class="ch-grid">
+                    <line x1="34" y1="20"  x2="548" y2="20"></line>
+                    <line x1="34" y1="60"  x2="548" y2="60"></line>
+                    <line x1="34" y1="100" x2="548" y2="100"></line>
+                  </g>
+                  <g class="ch-axis">
+                    <text x="26" y="24"  text-anchor="end">3</text>
+                    <text x="26" y="64"  text-anchor="end">2</text>
+                    <text x="26" y="104" text-anchor="end">1</text>
+                    <text x="26" y="144" text-anchor="end">0</text>
+                  </g>
+                  <line class="ch-base" x1="34" y1="140" x2="548" y2="140"></line>
+                  <g>
+                    <rect class="ch-bar" x="42"  y="60"  width="28" height="80" rx="4" fill="#a83f38" data-tip="Sep 2025 · 2 missed"></rect>
+                    <rect class="ch-bar" x="84"  y="20"  width="28" height="120" rx="4" fill="#a83f38" data-tip="Oct 2025 · 3 missed"></rect>
+                    <rect class="ch-bar" x="126" y="100" width="28" height="40" rx="4" fill="#a83f38" data-tip="Nov 2025 · 1 missed"></rect>
+                    <rect class="ch-bar" x="168" y="60"  width="28" height="80" rx="4" fill="#a83f38" data-tip="Dec 2025 · 2 missed"></rect>
+                    <rect class="ch-bar" x="210" y="100" width="28" height="40" rx="4" fill="#a83f38" data-tip="Jan 2026 · 1 missed"></rect>
+                    <rect class="ch-bar" x="252" y="60"  width="28" height="80" rx="4" fill="#a83f38" data-tip="Feb 2026 · 2 missed"></rect>
+                    <rect class="ch-bar" x="336" y="100" width="28" height="40" rx="4" fill="#a83f38" data-tip="Apr 2026 · 1 missed"></rect>
+                    <rect class="ch-bar" x="462" y="60"  width="28" height="80" rx="4" fill="#a83f38" data-tip="Jul 2026 · 2 missed"></rect>
+                  </g>
+                  <g class="ch-axis">
+                    <text x="56"  y="156" text-anchor="middle">SEP</text>
+                    <text x="98"  y="156" text-anchor="middle">OCT</text>
+                    <text x="140" y="156" text-anchor="middle">NOV</text>
+                    <text x="182" y="156" text-anchor="middle">DEC</text>
+                    <text x="224" y="156" text-anchor="middle">JAN</text>
+                    <text x="266" y="156" text-anchor="middle">FEB</text>
+                    <text x="308" y="156" text-anchor="middle">MAR</text>
+                    <text x="350" y="156" text-anchor="middle">APR</text>
+                    <text x="392" y="156" text-anchor="middle">MAY</text>
+                    <text x="434" y="156" text-anchor="middle">JUN</text>
+                    <text x="476" y="156" text-anchor="middle">JUL</text>
+                    <text x="518" y="156" text-anchor="middle">AUG</text>
+                  </g>
+                  <line x1="290" y1="14" x2="290" y2="146" stroke="#12161c" stroke-width="1" stroke-dasharray="3 3"></line>
+                  <text x="294" y="182" class="ch-lbl" style="font-size:9.5px;">CounselOS adopted &mdash; March 2026</text>
+                </svg>
+              </div>
+            </div>
+            <div class="card-note">
+              <b>11 in the six months before adoption &middot; 3 since.</b> The two in July are still open
+              and sit at the top of the Today screen. <a href="#" data-goto="today">See them &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Unverified backlog -->
+          <div class="card">
+            <div class="card-head"><h3>Unverified obligations</h3><span class="pill pill-warn"><span class="dot"></span> Oldest 34 days</span></div>
+            <div class="card-body">
+              <div class="chart-wrap">
+                <svg class="chart" viewBox="0 0 560 190" role="img" aria-label="Bar chart of unverified obligations by age. 0 to 7 days: 4. 8 to 30 days: 5. Over 30 days: 2.">
+                  <g class="ch-lbl" style="font-size:11px;">
+                    <text x="0" y="34">0&ndash;7 days</text>
+                    <text x="0" y="94">8&ndash;30 days</text>
+                    <text x="0" y="154">30+ days</text>
+                  </g>
+                  <g>
+                    <rect class="ch-bar" x="96" y="16" width="288" height="26" rx="4" fill="#2f5aa8" data-tip="0–7 days · 4 obligations"></rect>
+                    <rect class="ch-bar" x="96" y="76" width="360" height="26" rx="4" fill="#2f5aa8" data-tip="8–30 days · 5 obligations"></rect>
+                    <rect class="ch-bar" x="96" y="136" width="144" height="26" rx="4" fill="#2f5aa8" data-tip="30+ days · 2 obligations"></rect>
+                  </g>
+                  <g class="ch-val">
+                    <text x="396" y="34">4</text>
+                    <text x="468" y="94">5</text>
+                    <text x="252" y="154">2</text>
+                  </g>
+                  <text x="272" y="154" class="ch-lbl" style="font-size:9.5px; fill:#9c6a12;">&#9888; includes the 54% Ashfield scan</text>
+                </svg>
+              </div>
+            </div>
+            <div class="card-note">
+              Eleven obligations are driving deadlines that no lawyer has yet confirmed against the
+              original. Two have been sitting over a month.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid g-2" style="align-items:start;">
+
+          <!-- Exposure -->
+          <div class="card">
+            <div class="card-head"><h3>Exposure, next 90 days</h3><span class="eyebrow">Value at risk</span></div>
+            <div class="card-body">
+              <div class="chart-wrap">
+                <svg class="chart" viewBox="0 0 560 210" role="img" aria-label="Bar chart of value at risk by matter. Sunrise Tower lease 1.9 million pounds, Project Atlas 1.85 million, Meridian Series C 240 thousand, Northwind MSA 150 thousand, Kestrel distribution 60 thousand.">
+                  <g class="ch-lbl" style="font-size:10.5px;">
+                    <text x="0" y="26">Sunrise Tower lease</text>
+                    <text x="0" y="66">Project Atlas</text>
+                    <text x="0" y="106">Meridian Series C</text>
+                    <text x="0" y="146">Northwind MSA</text>
+                    <text x="0" y="186">Kestrel distribution</text>
+                  </g>
+                  <g>
+                    <rect class="ch-bar" x="140" y="10"  width="330" height="24" rx="4" fill="#2f5aa8" data-tip="Sunrise Tower lease · £1,900,000 · break option"></rect>
+                    <rect class="ch-bar" x="140" y="50"  width="321" height="24" rx="4" fill="#2f5aa8" data-tip="Project Atlas · £1,850,000 · consents + facility"></rect>
+                    <rect class="ch-bar" x="140" y="90"  width="42"  height="24" rx="4" fill="#2f5aa8" data-tip="Meridian Series C · £240,000 · term sheet expiry"></rect>
+                    <rect class="ch-bar" x="140" y="130" width="26"  height="24" rx="4" fill="#2f5aa8" data-tip="Northwind MSA · £150,000"></rect>
+                    <rect class="ch-bar" x="140" y="170" width="11"  height="24" rx="4" fill="#2f5aa8" data-tip="Kestrel distribution · £60,000"></rect>
+                  </g>
+                  <g class="ch-val">
+                    <text x="480" y="26">&pound;1.90m</text>
+                    <text x="471" y="66">&pound;1.85m</text>
+                    <text x="192" y="106">&pound;240k</text>
+                    <text x="176" y="146">&pound;150k</text>
+                    <text x="161" y="186">&pound;60k</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <div class="card-note"><b>&pound;4.2m across 5 matters.</b> Value is the contract value at stake if the deadline is missed, not the fee.</div>
+          </div>
+
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>Matters most at risk</h3><span class="eyebrow">Exposure &times; unverified</span></div>
+              <div class="card-body-flush" style="padding:0;">
+                <div class="rank"><span class="rank-n">1</span><span class="rank-body"><span class="rank-t">SNRS-0092 &middot; Sunrise Tower</span><span class="rank-s">Break notice due 07 Sep &middot; 1 unverified clause</span></span><span class="rank-v">&pound;1.90m</span></div>
+                <div class="rank"><span class="rank-n">2</span><span class="rank-body"><span class="rank-t">ATLAS-2026 &middot; Project Atlas</span><span class="rank-s">2 due today &middot; 3 unverified &middot; facility default risk</span></span><span class="rank-v">&pound;1.85m</span></div>
+                <div class="rank"><span class="rank-n">3</span><span class="rank-body"><span class="rank-t">MERI-4471 &middot; Meridian Series C</span><span class="rank-s">Term sheet expires 21 Aug</span></span><span class="rank-v">&pound;240k</span></div>
+                <div class="rank"><span class="rank-n">4</span><span class="rank-body"><span class="rank-t">NWND-1180 &middot; Northwind MSA</span><span class="rank-s">Notice due Dec &middot; verified</span></span><span class="rank-v">&pound;150k</span></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Extraction spend</h3><span class="eyebrow">August</span></div>
+              <div class="card-body">
+                <div class="row-between"><span class="small">&pound;2.14 of &pound;25.00 monthly cap</span><span class="mono tiny muted">9%</span></div>
+                <div class="meter"><span style="width:8.6%;"></span></div>
+                <div class="row-between small" style="margin-top:.8rem;"><span>Documents read this month</span><span class="mono">47</span></div>
+                <div class="row-between small" style="margin-top:.35rem;"><span>Re-reads avoided (cache)</span><span class="mono">188</span></div>
+                <div class="row-between small" style="margin-top:.35rem;"><span>Cost per document</span><span class="mono">&pound;0.046</span></div>
+                <p class="tiny muted" style="margin-top:.7rem;">
+                  Reading all 265 unread contracts would cost about <b>&pound;12</b> once. The nightly
+                  recalculation that keeps every deadline current costs nothing, because it is arithmetic.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ OUTLOOK ══════ -->
+      <section class="screen" id="screen-outlook" data-title="Oversight / Outlook" hidden>
+        <div class="screen-head">
+          <h1>Outlook</h1>
+          <p>A deadline that only lives in CounselOS is a deadline they will miss. This is how it
+             reaches the lawyer where they already are &mdash; and what it is not permitted to do.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:1rem;">
+          <div class="card-head">
+            <h3>Microsoft 365 &middot; connected</h3>
+            <span class="pill pill-ok"><span class="dot"></span> 12 deadlines synced</span>
+          </div>
+          <div class="card-body" style="padding:.7rem 1rem;">
+            <div class="scope"><span class="scope-ico">&#10003;</span><span><b>Write</b> derived deadlines to your calendar, with reminders</span></div>
+            <div class="scope"><span class="scope-ico">&#10003;</span><span><b>Send</b> the 07:00 digest to you and your team &mdash; internal only</span></div>
+            <div class="scope"><span class="scope-ico">&#10003;</span><span><b>Draft</b> notices into your drafts folder from precedent</span></div>
+            <div class="scope"><span class="scope-ico">&#10003;</span><span><b>Read</b> mail threads tagged to a matter, to close obligations automatically</span></div>
+            <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span><b>Cannot send</b> anything to a counterparty &mdash; every outbound stops at a partner gate</span></div>
+            <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot read your personal, firm-management or untagged mail</span></div>
+            <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot delete or move anything in your mailbox</span></div>
+          </div>
+          <div class="card-note">412 actions logged in the last 30 days. Every one is attributable and reversible.</div>
+        </div>
+
+        <div class="grid g-2" style="align-items:start;">
+
+          <!-- Morning digest -->
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>The 07:00 digest</h3><span class="eyebrow">As it arrives</span></div>
+              <div class="card-body">
+                <div class="mail">
+                  <div class="mail-head">
+                    <div class="mail-sub">Today: 2 overdue, 2 due, 1 window opens</div>
+                    <div class="mail-meta">CounselOS &lt;no-reply@firm.com&gt; &middot; to Dana Whitfield &middot; 07:00</div>
+                  </div>
+                  <div class="mail-body">
+                    <div class="mail-item">
+                      <span class="mail-tag" style="background:var(--stop-sf); color:var(--stop);">27D</span>
+                      <span><b>Vertex Analytics</b> &mdash; serve notice of non-renewal<br>
+                        <span class="mono tiny muted">renewal 09 Nov 2026 &minus; 120 days = due 12 Jul 2026</span></span>
+                    </div>
+                    <div class="mail-item">
+                      <span class="mail-tag" style="background:var(--stop-sf); color:var(--stop);">8D</span>
+                      <span><b>Ashfield Group</b> &mdash; annual price review window<br>
+                        <span class="mono tiny muted">due 31 Jul 2026 &middot; 54% confidence, unverified</span></span>
+                    </div>
+                    <div class="mail-item">
+                      <span class="mail-tag" style="background:var(--warn-sf); color:var(--warn);">TODAY</span>
+                      <span><b>Northwind</b> &mdash; serve change-of-control consent request<br>
+                        <span class="mono tiny muted">draft letter already in your drafts folder</span></span>
+                    </div>
+                    <div class="mail-item">
+                      <span class="mail-tag" style="background:var(--warn-sf); color:var(--warn);">TODAY</span>
+                      <span><b>Caledon Bank</b> &mdash; request change-of-control waiver<br>
+                        <span class="mono tiny muted">event of default &middot; critical path to signing</span></span>
+                    </div>
+                    <div class="mail-item">
+                      <span class="mail-tag" style="background:var(--accent-sf); color:var(--accent);">OPENS</span>
+                      <span><b>Sunrise Tower</b> &mdash; break option now exercisable<br>
+                        <span class="mono tiny muted">break 06 Mar 2027 &minus; 180 days = due 07 Sep 2026</span></span>
+                    </div>
+                  </div>
+                  <div class="mail-foot">
+                    <b>Reply to this email to ask a question.</b> &ldquo;Which of these can wait until Monday?&rdquo;
+                    goes to the same agent as the Ask screen.
+                  </div>
+                </div>
+              </div>
+              <div class="card-note">
+                The digest is the part people actually use. It needs the lawyer to open nothing and
+                log into nothing &mdash; and it carries the derivation, so it can be trusted at a glance.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Drafted, awaiting you</h3><span class="pill pill-warn"><span class="dot"></span> 2 held at the gate</span></div>
+              <div class="card-body-flush" style="padding:0;">
+                <div class="cal"><span class="cal-date"><b>&#9998;</b></span><span style="flex:1;"><span class="rank-t">Consent request &mdash; Northwind Industrials</span><span class="rank-s">From Consent Request (M&amp;A) v4 &middot; in Drafts &middot; not sent</span></span><button class="btn btn-sm btn-primary">Review</button></div>
+                <div class="cal"><span class="cal-date"><b>&#9998;</b></span><span style="flex:1;"><span class="rank-t">Waiver request &mdash; Caledon Bank</span><span class="rank-s">From Facility Waiver v2 &middot; in Drafts &middot; not sent</span></span><button class="btn btn-sm btn-primary">Review</button></div>
+              </div>
+              <div class="card-note">Drafting is automatic. Sending never is.</div>
+            </div>
+          </div>
+
+          <!-- Calendar + inbound -->
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>In your calendar</h3><span class="eyebrow">Written by CounselOS</span></div>
+              <div class="card-body-flush" style="padding:0;">
+                <div class="cal"><span class="cal-date"><b>08</b>AUG</span><span style="flex:1;"><span class="rank-t">Northwind consent &mdash; last day</span><span class="rank-s">All day &middot; reminder 2 days ago</span></span><span class="pill pill-warn"><span class="dot"></span> Today</span></div>
+                <div class="cal"><span class="cal-date"><b>08</b>AUG</span><span style="flex:1;"><span class="rank-t">Tower break window opens</span><span class="rank-s">All day &middot; reminder set for 24 Aug</span></span><span class="pill pill-info"><span class="dot"></span> Opens</span></div>
+                <div class="cal"><span class="cal-date"><b>21</b>AUG</span><span style="flex:1;"><span class="rank-t">Meridian term sheet expires</span><span class="rank-s">All day &middot; reminder 14 Aug</span></span><span class="pill">Scheduled</span></div>
+                <div class="cal"><span class="cal-date"><b>07</b>SEP</span><span style="flex:1;"><span class="rank-t">Tower break notice &mdash; last day</span><span class="rank-s">All day &middot; reminders 07 &amp; 31 Aug</span></span><span class="pill">Scheduled</span></div>
+                <div class="cal"><span class="cal-date"><b>01</b>DEC</span><span style="flex:1;"><span class="rank-t">Northwind MSA notice &mdash; last day</span><span class="rank-s">All day &middot; reminder 01 Nov</span></span><span class="pill">Scheduled</span></div>
+              </div>
+              <div class="card-note">
+                Two reminders per obligation: one when the window opens, one before it closes.
+                Deleting the calendar entry does not delete the obligation &mdash; it reappears on the next sweep.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Closed by inbound mail</h3><span class="eyebrow">Loop closing</span></div>
+              <div class="card-body">
+                <div class="mail">
+                  <div class="mail-head">
+                    <div class="mail-sub">RE: Change of control &mdash; consent request</div>
+                    <div class="mail-meta">j.pereira@northwind.com &middot; 06 Aug, 16:22 &middot; tagged ATLAS-2026</div>
+                  </div>
+                  <div class="mail-body">
+                    <p class="quote" style="margin:0;">&ldquo;&hellip;the Supplier <b>confirms its consent</b> to the proposed change of control pursuant to clause 14.2, subject to the existing pricing being maintained for the balance of the term.&rdquo;</p>
+                  </div>
+                  <div class="mail-foot">
+                    <span class="pill pill-ok"><span class="dot"></span> Obligation closed</span>
+                    &nbsp;Matched to <span class="cite">&sect;14.2</span> &middot; CP tracker item 3 moved to <b>Satisfied</b> &middot; flagged for your review: the consent is conditional.
+                  </div>
+                </div>
+              </div>
+              <div class="card-note">
+                Closing is automatic; the <b>condition</b> attached to it is not. Anything qualified gets
+                escalated back to a human rather than quietly marked done.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ ASK (multi-agent) ══════ -->
+      <section class="screen" id="screen-ask" data-title="Work / Ask" hidden>
+        <div class="screen-head">
+          <h1>Ask</h1>
+          <p>Four agents behind one box. The router decides which one answers &mdash; and that decision is
+             both a cost control and a privacy boundary, so it is shown rather than hidden.</p>
+        </div>
+
+        <div class="ask-wrap">
+          <div class="card">
+            <div class="thread">
+
+              <!-- 1 · database only, free -->
+              <div class="msg msg-user">
+                <span class="msg-av" aria-hidden="true">DW</span>
+                <div class="msg-body"><div class="msg-who">You</div>
+                  <p>What&rsquo;s due in September across all matters?</p></div>
+              </div>
+              <div class="msg msg-agent">
+                <span class="msg-av" aria-hidden="true">&#9679;</span>
+                <div class="msg-body">
+                  <div class="msg-who">CounselOS</div>
+                  <div class="route">
+                    <span class="route-step">Router</span><span class="route-arrow">&rarr;</span>
+                    <span class="route-step route-db">Obligations &middot; database</span>
+                    <span class="route-arrow">&rarr;</span><span class="route-step">Verifier</span>
+                    <span class="route-cost">&pound;0.000 &middot; no documents read</span>
+                  </div>
+                  <p><strong>Three obligations fall due in September.</strong></p>
+                  <table class="ans-tbl">
+                    <thead><tr><th>Due</th><th>Obligation</th><th>Matter</th><th>Source</th></tr></thead>
+                    <tbody>
+                      <tr><td>07 Sep</td><td>Tower break notice &mdash; last day</td><td class="mono">SNRS-0092</td><td><span class="cite">&sect;17.2</span></td></tr>
+                      <tr><td>14 Sep</td><td>Atlas signing target</td><td class="mono">ATLAS-2026</td><td class="muted">manual</td></tr>
+                      <tr><td>22 Sep</td><td>Kestrel price review window</td><td class="mono">ATLAS-2026</td><td><span class="cite">&sect;9.4</span></td></tr>
+                    </tbody>
+                  </table>
+                  <p class="tiny muted">Every date above was computed by the engine and read straight from the
+                    obligations table. I did not calculate any of them.</p>
+                </div>
+              </div>
+
+              <!-- 2 · document reader, paid -->
+              <div class="msg msg-user">
+                <span class="msg-av" aria-hidden="true">DW</span>
+                <div class="msg-body"><div class="msg-who">You</div>
+                  <p>Does the Caledon facility restrict disposals?</p></div>
+              </div>
+              <div class="msg msg-agent">
+                <span class="msg-av" aria-hidden="true">&#9679;</span>
+                <div class="msg-body">
+                  <div class="msg-who">CounselOS</div>
+                  <div class="route">
+                    <span class="route-step">Router</span><span class="route-arrow">&rarr;</span>
+                    <span class="route-step route-doc">Document reader &middot; client data</span>
+                    <span class="route-arrow">&rarr;</span><span class="route-step">Verifier</span>
+                    <span class="route-cost">&pound;0.021 &middot; 3 clauses read</span>
+                  </div>
+                  <p><strong>Yes &mdash; materially.</strong> Disposals are prohibited above a threshold, with
+                     narrow carve-outs.</p>
+                  <div class="quote">&ldquo;The Borrower shall not, and shall procure that no member of the Group shall, dispose of any asset for consideration exceeding &pound;500,000 in any financial year, other than a Permitted Disposal.&rdquo;</div>
+                  <div class="provenance"><span class="cite">&sect;20.3</span><span class="mono">Facility_Caledon_2022.pdf</span><span>&middot;</span><span>Permitted Disposal defined at <span class="cite">&sect;1.1</span></span></div>
+                  <p class="tiny muted" style="margin-top:.5rem;">
+                    This is an interpretive answer read from the document, not a computed field.
+                    Read the clause before relying on it &mdash; the carve-outs at &sect;1.1 are doing real work.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 3 · general knowledge, no client data -->
+              <div class="msg msg-user">
+                <span class="msg-av" aria-hidden="true">DW</span>
+                <div class="msg-body"><div class="msg-who">You</div>
+                  <p>What&rsquo;s the usual market position on a MAC clause in a UK share purchase?</p></div>
+              </div>
+              <div class="msg msg-agent">
+                <span class="msg-av" aria-hidden="true">&#9679;</span>
+                <div class="msg-body">
+                  <div class="msg-who">CounselOS</div>
+                  <div class="route">
+                    <span class="route-step">Router</span><span class="route-arrow">&rarr;</span>
+                    <span class="route-step route-gen">General &middot; Claude &middot; no client data</span>
+                    <span class="route-cost">&pound;0.011</span>
+                  </div>
+                  <p>On UK private M&amp;A, a buyer-favourable MAC condition is the exception rather than the
+                     norm &mdash; most deals either omit it or draft it narrowly, with quantified thresholds,
+                     carve-outs for market-wide and sector-wide events, and a durability requirement.</p>
+                  <p style="margin-top:.5rem;">Where one is included, the negotiation usually turns on
+                     three points: whether general economic conditions are carved out, whether the effect
+                     must be measurable against a stated financial metric, and who bears the burden of proof.</p>
+                  <div class="route" style="margin:.7rem 0 0; background:var(--paper-2);">
+                    <span class="route-step route-gen">&#128274; No client data in this prompt</span>
+                    <span class="route-cost">nothing from ATLAS-2026 was sent</span>
+                  </div>
+                  <p class="tiny muted" style="margin-top:.5rem;">
+                    General guidance, not advice on this deal. For the Atlas position, ask about the SPA
+                    directly and I will route it to the documents instead.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 4 · composed -->
+              <div class="msg msg-user">
+                <span class="msg-av" aria-hidden="true">DW</span>
+                <div class="msg-body"><div class="msg-who">You</div>
+                  <p>Which of our upcoming deadlines sit on contracts we haven&rsquo;t verified?</p></div>
+              </div>
+              <div class="msg msg-agent">
+                <span class="msg-av" aria-hidden="true">&#9679;</span>
+                <div class="msg-body">
+                  <div class="msg-who">CounselOS</div>
+                  <div class="route">
+                    <span class="route-step">Router</span><span class="route-arrow">&rarr;</span>
+                    <span class="route-step route-db">Obligations</span><span class="route-arrow">+</span>
+                    <span class="route-step route-doc">Document reader</span>
+                    <span class="route-arrow">&rarr;</span><span class="route-step">Verifier</span>
+                    <span class="route-cost">&pound;0.008</span>
+                  </div>
+                  <p><strong>Two &mdash; and one of them is already overdue.</strong></p>
+                  <table class="ans-tbl">
+                    <thead><tr><th>Due</th><th>Obligation</th><th>Confidence</th><th>Why</th></tr></thead>
+                    <tbody>
+                      <tr><td>31 Jul</td><td>Ashfield price review</td><td>54%</td><td>Scanned original, OCR poor</td></tr>
+                      <tr><td>&mdash;</td><td>Tanaka pre-emption</td><td>71%</td><td>Japanese-language original</td></tr>
+                    </tbody>
+                  </table>
+                  <p class="tiny muted">The Ashfield deadline has passed on a clause nobody has confirmed.
+                     That combination is the one worth escalating.</p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="composer">
+              <input class="composer-input" id="askInput" placeholder="Ask about a matter, a document, or the law&hellip;" aria-label="Ask a question">
+              <button class="btn btn-primary" id="askSend">Ask</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>Who answers</h3><span class="eyebrow">4 agents</span></div>
+              <div class="card-body-flush" style="padding:0;">
+                <div class="agent-row"><span style="flex:1;"><span class="agent-n">Router</span><span class="agent-d">Picks the path. Never answers.</span></span><span class="agent-c">&asymp;&pound;0</span></div>
+                <div class="agent-row"><span style="flex:1;"><span class="agent-n">Obligations</span><span class="agent-d">Queries the database. Returns computed rows.</span></span><span class="agent-c">free</span></div>
+                <div class="agent-row"><span style="flex:1;"><span class="agent-n">Document reader</span><span class="agent-d">Reads contract text. Quotes clauses.</span></span><span class="agent-c">&pound;0.02</span></div>
+                <div class="agent-row"><span style="flex:1;"><span class="agent-n">General</span><span class="agent-d">Law, market practice, drafting. No client data.</span></span><span class="agent-c">&pound;0.01</span></div>
+                <div class="agent-row"><span style="flex:1;"><span class="agent-n">Verifier</span><span class="agent-d">Checks every citation resolves before you see it.</span></span><span class="agent-c">&asymp;&pound;0</span></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Model</h3></div>
+              <div class="model-pick" role="group" aria-label="Model selection">
+                <button class="model-btn" data-model="Claude" aria-pressed="true">Claude</button>
+                <button class="model-btn" data-model="OpenAI" aria-pressed="false">OpenAI</button>
+              </div>
+              <div class="card-note" style="border-top:1px dashed var(--line);">
+                Swappable per route. The database path never calls a model at all, so it is unaffected
+                by this choice &mdash; and free either way.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>The standing rule</h3></div>
+              <div class="card-body">
+                <p class="tiny" style="color:var(--slate); line-height:1.6;">
+                  The agent <b>reports what the engine computed</b>. It does not compute. Ask it for a
+                  deadline and it reads the obligations table; it will not do date arithmetic, because
+                  that is the one thing it could get quietly, plausibly wrong.
+                </p>
+                <p class="tiny" style="color:var(--slate); line-height:1.6; margin-top:.6rem;">
+                  Questions that need no client data are answered without any. That is enforced by the
+                  router, not by asking the model nicely.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -954,12 +1571,49 @@ a:hover{text-decoration:underline;}
     say('Swept 47 documents · 61 obligations re-derived · no change. Cost £0.00.');
   });
 
+  /* ══════ CHART TOOLTIPS ══════
+     An SVG chart on a page is interactive by default; every mark gets a hover readout. */
+  const tip = document.createElement('div');
+  tip.className = 'tip';
+  document.body.appendChild(tip);
+
+  document.querySelectorAll('[data-tip]').forEach(mark => {
+    mark.addEventListener('mouseenter', () => {
+      tip.textContent = mark.dataset.tip;
+      tip.classList.add('show');
+    });
+    mark.addEventListener('mousemove', (e) => {
+      tip.style.left = (e.clientX + 12) + 'px';
+      tip.style.top  = (e.clientY - 30) + 'px';
+    });
+    mark.addEventListener('mouseleave', () => tip.classList.remove('show'));
+  });
+
+  /* ══════ ASK ══════ */
+  const askInput = document.getElementById('askInput');
+  const askSend  = document.getElementById('askSend');
+  const ask = () => {
+    if (!askInput.value.trim()) return;
+    say('Wireframe — the agents are not wired up in this prototype.');
+    askInput.value = '';
+  };
+  askSend.addEventListener('click', ask);
+  askInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') ask(); });
+
+  document.querySelectorAll('.model-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.model-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      say(btn.dataset.model + ' selected for the document and general routes. The database route is unchanged — it calls no model.');
+    });
+  });
+
   /* ══════ ILLUSTRATIVE CONTROLS ══════ */
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.btn');
     if (!btn) return;
     if (btn.hasAttribute('data-done') || btn.hasAttribute('data-goto') ||
-        ['navToggle','sweepBtn'].includes(btn.id)) return;
+        ['navToggle','sweepBtn','askSend'].includes(btn.id)) return;
     say('Wireframe — this control is illustrative.');
   });
 
