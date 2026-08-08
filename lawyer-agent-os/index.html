@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CounselOS &mdash; Agent Operating System for Legal (Wireframe)</title>
+<meta name="description" content="Clickable wireframe of an agent operating system for a corporate/transactional lawyer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312161c'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' fill='%23fff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   CounselOS — Lawyer Agent OS wireframe
+   Plain CSS, no framework. Single self-contained file.
+   ══════════════════════════════════════════════════════════ */
+
+/* ══════ TOKENS ══════ */
+:root{
+  --ink:#12161c;        --ink-2:#1b222c;      --slate:#48546a;
+  --mute:#78849a;       --faint:#9aa4b6;
+  --line:#d7dde7;       --line-2:#e7ebf2;     --paper:#f4f6f9;
+  --paper-2:#fafbfd;    --white:#fff;
+
+  --accent:#2f5aa8;     --accent-dk:#22447f;  --accent-sf:#eaf0fa;
+  --ok:#2c7355;         --ok-sf:#e7f2ec;
+  --warn:#9c6a12;       --warn-sf:#fbf1de;
+  --stop:#a83f38;       --stop-sf:#fbeae8;
+
+  --radius:10px;        --radius-sm:6px;
+  --sh-sm:0 1px 2px rgba(18,22,28,.06);
+  --sh-md:0 4px 14px rgba(18,22,28,.08);
+  --sh-lg:0 18px 48px rgba(18,22,28,.18);
+  --t:.18s ease;
+  --rail:250px;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --serif:'Newsreader',Georgia,serif;
+}
+
+/* ══════ BASE ══════ */
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0; font-weight:600; line-height:1.25;}
+p{margin:0;}
+ul{margin:0; padding:0; list-style:none;}
+button{font:inherit; color:inherit; cursor:pointer; border:0; background:none;}
+a{color:var(--accent); text-decoration:none;}
+a:hover{text-decoration:underline;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px;}
+[hidden]{display:none !important;}
+
+.skip-link{position:absolute; left:-9999px; top:0; z-index:200; background:var(--ink); color:#fff; padding:.6rem 1rem;}
+.skip-link:focus{left:.5rem; top:.5rem;}
+
+/* ══════ SHARED ATOMS ══════ */
+.mono{font-family:var(--mono);}
+.cite{
+  font-family:var(--mono); font-size:11px; color:var(--accent);
+  background:var(--accent-sf); padding:1px 5px; border-radius:4px;
+  white-space:nowrap; cursor:help;
+}
+.eyebrow{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--mute); font-weight:500;
+}
+.pill{
+  display:inline-flex; align-items:center; gap:.35rem;
+  font-size:11.5px; font-weight:500; padding:2px 9px; border-radius:20px;
+  border:1px solid var(--line); background:var(--white); color:var(--slate);
+  white-space:nowrap;
+}
+.pill-ok{background:var(--ok-sf); border-color:#bfdccd; color:var(--ok);}
+.pill-warn{background:var(--warn-sf); border-color:#e8d3a6; color:var(--warn);}
+.pill-stop{background:var(--stop-sf); border-color:#eec4bf; color:var(--stop);}
+.pill-info{background:var(--accent-sf); border-color:#c5d6ef; color:var(--accent);}
+.dot{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none;}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
+  padding:.45rem .85rem; border-radius:var(--radius-sm); font-size:12.5px;
+  font-weight:500; border:1px solid var(--line); background:var(--white);
+  color:var(--slate); transition:background var(--t),border-color var(--t),color var(--t);
+}
+.btn:hover{background:var(--paper); border-color:var(--faint); color:var(--ink);}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+.btn-primary:hover{background:var(--accent-dk); border-color:var(--accent-dk); color:#fff;}
+.btn-quiet{border-color:transparent; color:var(--mute);}
+.btn-sm{padding:.28rem .6rem; font-size:11.5px;}
+
+.card{
+  background:var(--white); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:var(--sh-sm);
+}
+.card-head{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:.8rem 1rem; border-bottom:1px solid var(--line-2);
+}
+.card-head h3{font-size:13.5px;}
+.card-body{padding:1rem;}
+.card-body-flush{padding:0;}
+.card-note{
+  padding:.6rem 1rem; border-top:1px dashed var(--line);
+  font-size:11.5px; color:var(--mute); background:var(--paper-2);
+  border-radius:0 0 var(--radius) var(--radius);
+}
+
+.grid{display:grid; gap:1rem;}
+.g-2{grid-template-columns:repeat(2,1fr);}
+.g-split{grid-template-columns:1.35fr 1fr;}
+.g-3{grid-template-columns:repeat(3,1fr);}
+.g-4{grid-template-columns:repeat(4,1fr);}
+.stack{display:flex; flex-direction:column; gap:1rem;}
+.row{display:flex; align-items:center; gap:.5rem;}
+.row-between{display:flex; align-items:center; justify-content:space-between; gap:1rem;}
+.wrap{flex-wrap:wrap;}
+.muted{color:var(--mute);}
+.small{font-size:12px;}
+.tiny{font-size:11.5px;}
+
+/* ══════ APP FRAME ══════ */
+.app{display:flex; min-height:100vh;}
+
+/* ── Left rail ── */
+.rail{
+  width:var(--rail); flex:none; background:var(--ink); color:#cfd6e2;
+  display:flex; flex-direction:column; position:sticky; top:0; height:100vh;
+  overflow-y:auto;
+}
+.brand{padding:1.1rem 1.1rem .9rem; border-bottom:1px solid #2a323f;}
+.brand-mark{
+  font-family:var(--serif); font-size:20px; font-weight:600;
+  color:#fff; letter-spacing:-.01em; display:block;
+}
+.brand-sub{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:#7d8a9e; margin-top:.2rem; display:block;
+}
+.brand-badge{
+  display:inline-block; margin-top:.55rem; font-family:var(--mono);
+  font-size:9.5px; letter-spacing:.1em; text-transform:uppercase;
+  border:1px dashed #4a5566; color:#94a1b5; padding:1px 6px; border-radius:3px;
+}
+
+.nav{padding:.7rem .6rem;}
+.nav-label{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:#69758a; padding:.5rem .5rem .35rem;
+}
+.nav-item{
+  display:flex; align-items:center; gap:.6rem; width:100%; text-align:left;
+  padding:.5rem .55rem; border-radius:var(--radius-sm); color:#cfd6e2;
+  font-size:13px; transition:background var(--t),color var(--t);
+}
+.nav-item:hover{background:#232b36; color:#fff;}
+.nav-item[aria-selected="true"]{background:var(--accent); color:#fff; font-weight:500;}
+.nav-ico{
+  width:20px; flex:none; text-align:center; font-size:12px; opacity:.85;
+}
+.nav-count{
+  margin-left:auto; font-family:var(--mono); font-size:10px;
+  background:#333c4a; color:#cfd6e2; padding:0 5px; border-radius:9px;
+}
+.nav-item[aria-selected="true"] .nav-count{background:rgba(255,255,255,.22); color:#fff;}
+
+.rail-matters{padding:.2rem .6rem 1rem;}
+.matter-chip{
+  display:block; width:100%; text-align:left; padding:.45rem .55rem;
+  border-radius:var(--radius-sm); color:#aab4c4; font-size:12px;
+  border-left:2px solid transparent; transition:background var(--t),color var(--t);
+}
+.matter-chip:hover{background:#232b36; color:#fff;}
+.matter-chip.active{background:#232b36; color:#fff; border-left-color:var(--accent);}
+.matter-chip span{display:block; font-family:var(--mono); font-size:9.5px; color:#69758a; margin-top:1px;}
+
+.rail-foot{margin-top:auto; padding:.9rem 1.1rem; border-top:1px solid #2a323f;}
+.who{display:flex; align-items:center; gap:.6rem;}
+.avatar{
+  width:30px; height:30px; border-radius:50%; flex:none;
+  background:#3a4553; color:#fff; display:grid; place-items:center;
+  font-size:11px; font-weight:600; font-family:var(--mono);
+}
+.who-name{font-size:12.5px; color:#e7ebf2;}
+.who-role{font-size:10.5px; color:#7d8a9e;}
+
+/* ── Main ── */
+.main{flex:1; min-width:0; display:flex; flex-direction:column;}
+.topbar{
+  position:sticky; top:0; z-index:20; background:rgba(244,246,249,.92);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+  padding:.7rem 1.4rem; display:flex; align-items:center; gap:1rem;
+}
+.crumb{font-family:var(--mono); font-size:11px; color:var(--mute); letter-spacing:.04em;}
+.crumb b{color:var(--ink); font-weight:500;}
+.topbar-actions{margin-left:auto; display:flex; align-items:center; gap:.5rem;}
+.nav-toggle{display:none;}
+
+.screen{padding:1.4rem; max-width:1280px; width:100%;}
+.screen-head{margin-bottom:1.2rem;}
+.screen-head h1{font-family:var(--serif); font-size:26px; letter-spacing:-.01em;}
+.screen-head p{color:var(--mute); font-size:13px; margin-top:.25rem; max-width:70ch;}
+
+/* ══════ DESK ══════ */
+.tile{padding:.9rem 1rem;}
+.tile-num{font-family:var(--serif); font-size:28px; line-height:1; font-weight:600;}
+.tile-lbl{font-size:11.5px; color:var(--mute); margin-top:.35rem;}
+.tile-accent .tile-num{color:var(--warn);}
+
+.approval{
+  display:flex; gap:.85rem; padding:.85rem 1rem; border-bottom:1px solid var(--line-2);
+  align-items:flex-start;
+}
+.approval:last-child{border-bottom:0;}
+.approval-body{flex:1; min-width:0;}
+.approval-title{font-size:13px; font-weight:500;}
+.approval-meta{font-size:11.5px; color:var(--mute); margin-top:.2rem;}
+.approval-acts{display:flex; gap:.35rem; flex:none;}
+.approval.is-done{background:var(--ok-sf);}
+.approval.is-done .approval-acts{display:none;}
+.approval-done-note{display:none; font-size:11.5px; color:var(--ok); font-weight:500; flex:none; align-self:center;}
+.approval.is-done .approval-done-note{display:block;}
+.gate-ico{
+  width:26px; height:26px; border-radius:var(--radius-sm); flex:none;
+  display:grid; place-items:center; font-size:12px;
+  background:var(--warn-sf); color:var(--warn); border:1px solid #e8d3a6;
+}
+
+.feed{padding:.3rem 0;}
+.feed-item{display:flex; gap:.7rem; padding:.55rem 1rem; align-items:flex-start;}
+.feed-time{font-family:var(--mono); font-size:10.5px; color:var(--faint); flex:none; width:44px; padding-top:2px;}
+.feed-text{font-size:12.5px; color:var(--slate);}
+.feed-text b{color:var(--ink); font-weight:500;}
+
+.dl-item{display:flex; gap:.7rem; padding:.55rem 1rem; align-items:center; border-bottom:1px solid var(--line-2);}
+.dl-item:last-child{border-bottom:0;}
+.dl-date{
+  font-family:var(--mono); font-size:10px; text-align:center; flex:none;
+  width:38px; border:1px solid var(--line); border-radius:var(--radius-sm); padding:2px 0;
+  background:var(--paper-2);
+}
+.dl-date b{display:block; font-size:13px; color:var(--ink);}
+.dl-text{display:block; font-size:12.5px;}
+.dl-sub{display:block; font-size:11px; color:var(--mute);}
+
+/* Matter apps (= Gadgets) */
+.app-card{
+  padding:.85rem; text-align:left; width:100%; display:block;
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--white);
+  transition:border-color var(--t),box-shadow var(--t),transform var(--t);
+}
+.app-card:hover{border-color:var(--accent); box-shadow:var(--sh-md); transform:translateY(-2px);}
+.app-ico{
+  width:30px; height:30px; border-radius:var(--radius-sm); display:grid; place-items:center;
+  background:var(--accent-sf); color:var(--accent); font-size:14px; margin-bottom:.55rem;
+}
+.app-name{display:block; font-size:12.5px; font-weight:500;}
+.app-scope{display:block; font-family:var(--mono); font-size:10px; color:var(--faint); margin-top:.25rem;}
+
+/* ══════ COUNSEL (agent chat) ══════ */
+.chat-wrap{display:grid; grid-template-columns:1fr 268px; gap:1rem; align-items:start;}
+.caps{padding:.7rem 1rem; display:flex; gap:.4rem; flex-wrap:wrap; align-items:center; border-bottom:1px solid var(--line-2);}
+.cap{
+  display:inline-flex; align-items:center; gap:.35rem; font-family:var(--mono);
+  font-size:10.5px; padding:2px 8px; border-radius:20px;
+  background:var(--paper); border:1px solid var(--line); color:var(--slate);
+}
+.cap b{color:var(--ink); font-weight:500;}
+.cap-add{border-style:dashed; color:var(--accent); cursor:pointer;}
+
+.thread{padding:1rem; display:flex; flex-direction:column; gap:1rem; max-height:none;}
+.msg{display:flex; gap:.7rem; align-items:flex-start;}
+.msg-av{
+  width:26px; height:26px; border-radius:var(--radius-sm); flex:none; display:grid;
+  place-items:center; font-size:10px; font-weight:600; font-family:var(--mono);
+}
+.msg-user .msg-av{background:var(--ink); color:#fff;}
+.msg-agent .msg-av{background:var(--accent); color:#fff;}
+.msg-body{flex:1; min-width:0; font-size:13px;}
+.msg-who{font-size:11px; color:var(--mute); margin-bottom:.3rem; font-family:var(--mono);}
+.msg-user .msg-body p{background:var(--paper); border:1px solid var(--line-2); padding:.6rem .8rem; border-radius:var(--radius); display:inline-block;}
+.msg-agent .msg-body{color:var(--slate);}
+.msg-agent .msg-body strong{color:var(--ink);}
+
+.find-list{margin:.6rem 0 0; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+.find{display:flex; gap:.6rem; padding:.5rem .7rem; border-bottom:1px solid var(--line-2); align-items:center; font-size:12.5px;}
+.find:last-child{border-bottom:0;}
+.find-name{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+.gate{
+  margin-top:.7rem; border:1px solid #e8d3a6; background:var(--warn-sf);
+  border-radius:var(--radius); overflow:hidden;
+}
+.gate-head{display:flex; gap:.5rem; align-items:center; padding:.6rem .8rem; border-bottom:1px solid #eddcb6; font-size:12.5px; font-weight:500; color:var(--warn);}
+.gate-body{padding:.7rem .8rem; font-size:12.5px; color:var(--slate);}
+.gate-sim{
+  margin-top:.55rem; padding:.5rem .65rem; background:rgba(255,255,255,.7);
+  border:1px dashed #ddc496; border-radius:var(--radius-sm); font-size:11.5px; color:var(--warn);
+}
+.gate-acts{display:flex; gap:.4rem; padding:0 .8rem .8rem;}
+
+.composer{display:flex; gap:.5rem; padding:.8rem 1rem; border-top:1px solid var(--line-2); background:var(--paper-2); border-radius:0 0 var(--radius) var(--radius);}
+.composer-input{
+  flex:1; border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:.5rem .7rem; font:inherit; font-size:12.5px; background:var(--white); color:var(--ink);
+}
+.composer-input::placeholder{color:var(--faint);}
+
+.side-note{font-size:11.5px; color:var(--mute); line-height:1.55;}
+.suggest{
+  display:block; width:100%; text-align:left; padding:.5rem .6rem; font-size:12px;
+  border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--white);
+  color:var(--slate); margin-bottom:.4rem; transition:border-color var(--t),color var(--t);
+}
+.suggest:hover{border-color:var(--accent); color:var(--ink);}
+
+/* ══════ MATTER ══════ */
+.banner{
+  display:flex; gap:.6rem; align-items:flex-start; padding:.65rem .85rem;
+  border-radius:var(--radius); font-size:12.5px; margin-bottom:1rem;
+  border:1px solid #c5d6ef; background:var(--accent-sf); color:var(--accent-dk);
+}
+.banner-warn{border-color:#e8d3a6; background:var(--warn-sf); color:var(--warn);}
+
+.matter-hero{
+  border:1px solid var(--line); background:var(--white); border-radius:var(--radius);
+  padding:1rem 1.1rem; margin-bottom:1rem; box-shadow:var(--sh-sm);
+}
+.matter-hero h2{font-family:var(--serif); font-size:22px;}
+.meta-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:.9rem; margin-top:.9rem; padding-top:.9rem; border-top:1px dashed var(--line);}
+.meta-k{font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint);}
+.meta-v{font-size:13px; margin-top:.15rem;}
+
+.ck{display:flex; gap:.7rem; padding:.6rem 1rem; border-bottom:1px solid var(--line-2); align-items:center;}
+.ck:last-child{border-bottom:0;}
+.ck-box{
+  width:15px; height:15px; border-radius:3px; border:1.5px solid var(--line); flex:none;
+  display:grid; place-items:center; font-size:9px; color:#fff;
+}
+.ck-box.done{background:var(--ok); border-color:var(--ok);}
+.ck-box.part{background:var(--warn-sf); border-color:var(--warn); color:var(--warn); font-size:11px; line-height:1;}
+.ck-name{flex:1; min-width:0; font-size:12.5px;}
+.ck.is-done .ck-name{color:var(--mute); text-decoration:line-through;}
+.ck-owner{font-family:var(--mono); font-size:10.5px; color:var(--faint); flex:none;}
+
+.progress{height:5px; border-radius:4px; background:var(--line-2); overflow:hidden; margin-top:.5rem;}
+.progress span{display:block; height:100%; background:var(--accent); border-radius:4px;}
+
+.team{display:flex; gap:.7rem; padding:.7rem 1rem; align-items:center; border-bottom:1px solid var(--line-2);}
+.team:last-child{border-bottom:0;}
+.team-av{width:26px; height:26px; border-radius:50%; background:var(--paper); border:1px solid var(--line); display:grid; place-items:center; font-family:var(--mono); font-size:10px; color:var(--slate); flex:none;}
+.team-n{font-size:12.5px;}
+.team-r{font-size:11px; color:var(--mute);}
+
+/* ══════ ABSTRACTION ══════ */
+.toolbar{
+  display:flex; gap:.5rem; align-items:center; flex-wrap:wrap;
+  padding:.7rem 1rem; border-bottom:1px solid var(--line-2); background:var(--paper-2);
+  border-radius:var(--radius) var(--radius) 0 0;
+}
+.select-fake{
+  display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .6rem;
+  border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--white);
+  font-size:12px; color:var(--slate);
+}
+.select-fake b{color:var(--ink); font-weight:500;}
+
+.abs-wrap{display:grid; grid-template-columns:1fr 320px; gap:1rem; align-items:start;}
+.table-scroll{overflow-x:auto;}
+table.tbl{border-collapse:collapse; width:100%; font-size:12px; min-width:820px;}
+.tbl th{
+  text-align:left; font-family:var(--mono); font-size:9.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--mute); font-weight:500;
+  padding:.5rem .7rem; border-bottom:1px solid var(--line); background:var(--paper-2);
+  position:sticky; top:0;
+}
+.tbl td{padding:.55rem .7rem; border-bottom:1px solid var(--line-2); vertical-align:top;}
+.tbl tr:last-child td{border-bottom:0;}
+.tbl tbody tr{cursor:pointer; transition:background var(--t);}
+.tbl tbody tr:hover{background:var(--paper-2);}
+.tbl tbody tr.active{background:var(--accent-sf);}
+.tbl tbody tr.active td:first-child{box-shadow:inset 2px 0 0 var(--accent);}
+.cell-main{display:block; color:var(--ink);}
+.cell-sub{display:block; margin-top:.2rem;}
+.doc-name{font-weight:500;}
+.doc-path{font-family:var(--mono); font-size:9.5px; color:var(--faint); display:block; margin-top:.15rem;}
+
+.conf{display:inline-flex; align-items:center; gap:.3rem; font-family:var(--mono); font-size:10px; color:var(--mute);}
+.conf-bar{width:26px; height:4px; border-radius:3px; background:var(--line-2); overflow:hidden; display:inline-block;}
+.conf-bar i{display:block; height:100%; background:var(--ok);}
+.conf-low .conf-bar i{background:var(--warn);}
+
+.detail-k{font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint);}
+.detail-v{font-size:12.5px; margin-top:.15rem; margin-bottom:.75rem; display:flex; gap:.4rem; align-items:baseline; flex-wrap:wrap;}
+.verify-box{
+  border-top:1px dashed var(--line); padding-top:.75rem; margin-top:.25rem;
+  font-size:11.5px; color:var(--mute);
+}
+
+/* ══════ BUILDER ══════ */
+.build-wrap{display:grid; grid-template-columns:1fr 268px; gap:1rem; align-items:start;}
+.canvas{padding:1.2rem; background:
+  radial-gradient(circle, var(--line) 1px, transparent 1px) 0 0/16px 16px, var(--paper-2);
+  border-radius:0 0 var(--radius) var(--radius);
+}
+.flow{display:flex; flex-direction:column; align-items:center; gap:0;}
+.block{
+  width:100%; max-width:430px; background:var(--white); border:1px solid var(--line);
+  border-radius:var(--radius); padding:.65rem .8rem; box-shadow:var(--sh-sm);
+  display:flex; gap:.65rem; align-items:flex-start; text-align:left;
+  transition:border-color var(--t),box-shadow var(--t);
+}
+.block:hover{border-color:var(--accent); box-shadow:var(--sh-md);}
+.block-ico{
+  width:26px; height:26px; border-radius:var(--radius-sm); flex:none; display:grid;
+  place-items:center; font-size:11px; background:var(--paper); border:1px solid var(--line-2); color:var(--slate);
+}
+.block-t{display:block; font-size:12.5px; font-weight:500;}
+.block-d{display:block; font-size:11.5px; color:var(--mute); margin-top:.15rem;}
+.block-tag{font-family:var(--mono); font-size:9.5px; color:var(--faint); margin-top:.3rem; display:block;}
+.block-gate{border-color:#e8d3a6; background:var(--warn-sf);}
+.block-gate .block-ico{background:#fff; border-color:#e8d3a6; color:var(--warn);}
+.block-gate .block-t{color:var(--warn);}
+.block-trigger{border-color:#c5d6ef; background:var(--accent-sf);}
+.block-trigger .block-ico{background:#fff; border-color:#c5d6ef; color:var(--accent);}
+.block-new{animation:pop .3s ease;}
+@keyframes pop{from{opacity:0; transform:scale(.96);} to{opacity:1; transform:none;}}
+.conn{width:1px; height:16px; background:var(--faint); position:relative;}
+.conn::after{
+  content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  border-left:3.5px solid transparent; border-right:3.5px solid transparent;
+  border-top:5px solid var(--faint);
+}
+.lock{font-family:var(--mono); font-size:9.5px; color:var(--warn); margin-left:auto; flex:none;}
+
+.palette-item{
+  display:flex; gap:.5rem; align-items:center; width:100%; text-align:left;
+  padding:.45rem .55rem; border:1px solid var(--line); border-radius:var(--radius-sm);
+  background:var(--white); margin-bottom:.35rem; font-size:12px; color:var(--slate);
+  transition:border-color var(--t),color var(--t),transform var(--t);
+}
+.palette-item:hover{border-color:var(--accent); color:var(--ink); transform:translateX(2px);}
+.palette-item .block-ico{width:22px; height:22px; font-size:10px;}
+
+.bp{
+  display:flex; gap:.6rem; align-items:flex-start; padding:.6rem 1rem;
+  border-bottom:1px solid var(--line-2);
+}
+.bp:last-child{border-bottom:0;}
+.bp-body{flex:1; min-width:0;}
+.bp-n{font-size:12.5px; font-weight:500;}
+.bp-d{font-size:11.5px; color:var(--mute); margin-top:.15rem;}
+
+/* ══════ CONNECTIONS ══════ */
+.conn-card{padding:0; overflow:hidden;}
+.conn-head{display:flex; gap:.7rem; align-items:center; padding:.8rem 1rem; border-bottom:1px solid var(--line-2);}
+.conn-logo{
+  width:32px; height:32px; border-radius:var(--radius-sm); flex:none; display:grid;
+  place-items:center; font-family:var(--mono); font-size:11px; font-weight:500;
+  background:var(--paper); border:1px solid var(--line); color:var(--slate);
+}
+.conn-n{font-size:13px; font-weight:500;}
+.conn-cat{font-size:11px; color:var(--mute);}
+.scope-list{padding:.7rem 1rem;}
+.scope{display:flex; gap:.5rem; align-items:flex-start; font-size:12px; color:var(--slate); padding:.2rem 0;}
+.scope-ico{flex:none; width:13px; text-align:center; font-size:10px; color:var(--ok); padding-top:1px;}
+.scope-no .scope-ico{color:var(--stop);}
+.conn-foot{
+  display:flex; gap:.5rem; align-items:center; padding:.6rem 1rem;
+  border-top:1px dashed var(--line); background:var(--paper-2); font-size:11.5px; color:var(--mute);
+}
+
+/* ══════ TRUST ══════ */
+.ledger td{font-family:var(--mono); font-size:11px;}
+.ledger td:nth-child(3){font-family:'IBM Plex Sans',sans-serif; font-size:12px;}
+.wall{display:flex; gap:.7rem; padding:.65rem 1rem; border-bottom:1px solid var(--line-2); align-items:center;}
+.wall:last-child{border-bottom:0;}
+.assure{display:flex; gap:.6rem; padding:.5rem 0; align-items:flex-start; font-size:12.5px; color:var(--slate);}
+.assure b{color:var(--ink); font-weight:500;}
+
+/* ══════ ARCHITECTURE PANEL ══════ */
+.overlay{
+  position:fixed; inset:0; background:rgba(18,22,28,.45); opacity:0; visibility:hidden;
+  transition:opacity var(--t),visibility var(--t); z-index:90;
+}
+.overlay.show{opacity:1; visibility:visible;}
+.arch{
+  position:fixed; top:0; right:0; height:100vh; width:min(520px,92vw); z-index:100;
+  background:var(--white); box-shadow:var(--sh-lg); transform:translateX(103%);
+  transition:transform .26s ease; display:flex; flex-direction:column; overflow-y:auto;
+}
+.arch.open{transform:none;}
+.arch-head{
+  position:sticky; top:0; background:var(--white); border-bottom:1px solid var(--line);
+  padding:1rem 1.2rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;
+}
+.arch-head h2{font-family:var(--serif); font-size:19px;}
+.arch-body{padding:1.2rem;}
+.map-tbl{width:100%; border-collapse:collapse; font-size:12px; margin:.6rem 0 1rem;}
+.map-tbl th{text-align:left; font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); font-weight:500; padding:.4rem .5rem; border-bottom:1px solid var(--line);}
+.map-tbl td{padding:.45rem .5rem; border-bottom:1px solid var(--line-2); vertical-align:top;}
+.map-tbl td:first-child{font-family:var(--mono); font-size:11px; color:var(--mute); width:44%;}
+.map-tbl td b{font-weight:500;}
+
+/* ══════ TOAST ══════ */
+.toast{
+  position:fixed; left:50%; bottom:1.4rem; transform:translate(-50%,140%); z-index:150;
+  background:var(--ink); color:#fff; font-size:12.5px; padding:.6rem 1rem;
+  border-radius:var(--radius); box-shadow:var(--sh-lg); transition:transform .26s ease;
+  max-width:88vw;
+}
+.toast.show{transform:translate(-50%,0);}
+
+/* ══════ RESPONSIVE ══════ */
+@media (max-width:1080px){
+  .chat-wrap,.build-wrap,.abs-wrap,.g-split{grid-template-columns:1fr;}
+  .g-4{grid-template-columns:repeat(2,1fr);}
+  .g-3{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:860px){
+  .rail{
+    position:fixed; left:0; top:0; z-index:80; transform:translateX(-100%);
+    transition:transform .24s ease; width:270px;
+  }
+  .rail.open{transform:none;}
+  .nav-toggle{display:inline-flex;}
+  .meta-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:640px){
+  .g-2,.g-3,.g-4{grid-template-columns:1fr;}
+  .screen{padding:1rem;}
+  .screen-head h1{font-size:22px;}
+  .crumb{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="app">
+
+  <!-- ══════════════════════════════════════════════════════
+       LEFT RAIL
+       ══════════════════════════════════════════════════════ -->
+  <aside class="rail" id="rail">
+    <div class="brand">
+      <span class="brand-mark">CounselOS</span>
+      <span class="brand-sub">Agent Operating System</span>
+      <span class="brand-badge">Wireframe &middot; illustrative</span>
+    </div>
+
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-label">Workspace</div>
+      <div role="tablist" aria-orientation="vertical">
+        <button class="nav-item" role="tab" data-screen="desk" aria-selected="true">
+          <span class="nav-ico" aria-hidden="true">&#9632;</span> Desk
+          <span class="nav-count">3</span>
+        </button>
+        <button class="nav-item" role="tab" data-screen="counsel" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9679;</span> Counsel
+        </button>
+        <button class="nav-item" role="tab" data-screen="matter" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9635;</span> Matter
+        </button>
+      </div>
+
+      <div class="nav-label">Tools</div>
+      <div role="tablist" aria-orientation="vertical">
+        <button class="nav-item" role="tab" data-screen="abstraction" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9636;</span> Abstraction
+          <span class="nav-count">47</span>
+        </button>
+        <button class="nav-item" role="tab" data-screen="builder" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9638;</span> Builder
+        </button>
+      </div>
+
+      <div class="nav-label">Governance</div>
+      <div role="tablist" aria-orientation="vertical">
+        <button class="nav-item" role="tab" data-screen="connections" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9673;</span> Connections
+          <span class="nav-count">5</span>
+        </button>
+        <button class="nav-item" role="tab" data-screen="trust" aria-selected="false">
+          <span class="nav-ico" aria-hidden="true">&#9670;</span> Trust &amp; Audit
+        </button>
+      </div>
+    </nav>
+
+    <div class="rail-matters">
+      <div class="nav-label">Matters</div>
+      <button class="matter-chip active" data-screen="matter">Project Atlas<span>ATLAS-2026 &middot; buy-side M&amp;A</span></button>
+      <button class="matter-chip" data-screen="matter">Meridian Series C<span>MERI-4471 &middot; financing</span></button>
+      <button class="matter-chip" data-screen="matter">Northwind MSA<span>NWND-1180 &middot; commercial</span></button>
+      <button class="matter-chip" data-screen="matter">Sunrise Tower Lease<span>SNRS-0092 &middot; real estate</span></button>
+    </div>
+
+    <div class="rail-foot">
+      <div class="who">
+        <span class="avatar" aria-hidden="true">DW</span>
+        <span>
+          <span class="who-name">Dana Whitfield</span><br>
+          <span class="who-role">Partner &middot; Corporate</span>
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════
+       MAIN
+       ══════════════════════════════════════════════════════ -->
+  <div class="main">
+
+    <header class="topbar">
+      <button class="btn btn-sm nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">&#9776; Menu</button>
+      <span class="crumb" id="crumb">Workspace / <b>Desk</b></span>
+      <div class="topbar-actions">
+        <span class="pill pill-ok"><span class="dot"></span> Ethical wall active</span>
+        <button class="btn btn-sm" id="archOpen">Architecture</button>
+      </div>
+    </header>
+
+    <main id="main">
+
+      <!-- ══════ SCREEN 1 · DESK ══════ -->
+      <section class="screen" id="screen-desk" data-title="Workspace / Desk">
+        <div class="screen-head">
+          <h1>Good morning, Dana.</h1>
+          <p>Four live matters. Your agents worked overnight &mdash; nothing left the firm without you.
+             Three actions are waiting on your signature.</p>
+        </div>
+
+        <div class="grid g-4" style="margin-bottom:1rem;">
+          <div class="card tile"><div class="tile-num">4</div><div class="tile-lbl">Active matters</div></div>
+          <div class="card tile tile-accent"><div class="tile-num">3</div><div class="tile-lbl">Awaiting your approval</div></div>
+          <div class="card tile"><div class="tile-num">47</div><div class="tile-lbl">Contracts abstracted</div></div>
+          <div class="card tile"><div class="tile-num">12</div><div class="tile-lbl">Deadlines this week</div></div>
+        </div>
+
+        <div class="grid g-2 g-split" style="align-items:start;">
+
+          <div class="stack">
+            <!-- Approvals -->
+            <div class="card">
+              <div class="card-head">
+                <h3>Awaiting your approval</h3>
+                <span class="pill pill-warn">Nothing sends without a partner</span>
+              </div>
+              <div class="card-body-flush" id="approvalList">
+                <div class="approval">
+                  <span class="gate-ico" aria-hidden="true">&#9888;</span>
+                  <div class="approval-body">
+                    <div class="approval-title">Send revised NDA redline to Northwind's counsel</div>
+                    <div class="approval-meta">Drafted by <b>Contract Agent</b> &middot; 6 changes against firm playbook &middot; leaves the firm via Outlook</div>
+                  </div>
+                  <div class="approval-acts">
+                    <button class="btn btn-sm">Review</button>
+                    <button class="btn btn-sm btn-primary" data-approve>Approve</button>
+                  </div>
+                  <span class="approval-done-note">&#10003; Approved &middot; sent</span>
+                </div>
+                <div class="approval">
+                  <span class="gate-ico" aria-hidden="true">&#9888;</span>
+                  <div class="approval-body">
+                    <div class="approval-title">File executed signature pages to iManage &#8250; ATLAS-2026</div>
+                    <div class="approval-meta">Requested by <b>Closing Agent</b> &middot; 11 PDFs &middot; final-version write to the DMS</div>
+                  </div>
+                  <div class="approval-acts">
+                    <button class="btn btn-sm">Review</button>
+                    <button class="btn btn-sm btn-primary" data-approve>Approve</button>
+                  </div>
+                  <span class="approval-done-note">&#10003; Approved &middot; filed</span>
+                </div>
+                <div class="approval">
+                  <span class="gate-ico" aria-hidden="true">&#9888;</span>
+                  <div class="approval-body">
+                    <div class="approval-title">Post diligence status summary to Slack &#8250; #project-atlas</div>
+                    <div class="approval-meta">Drafted by <b>Diligence Agent</b> &middot; client names redacted &middot; deal team channel only</div>
+                  </div>
+                  <div class="approval-acts">
+                    <button class="btn btn-sm">Review</button>
+                    <button class="btn btn-sm btn-primary" data-approve>Approve</button>
+                  </div>
+                  <span class="approval-done-note">&#10003; Approved &middot; posted</span>
+                </div>
+              </div>
+              <div class="card-note">
+                Every outbound action pauses here. The agent shows you what <em>would</em> happen before it happens &mdash;
+                you approve, edit, or refuse.
+              </div>
+            </div>
+
+            <!-- Matter apps -->
+            <div class="card">
+              <div class="card-head">
+                <h3>Your apps</h3>
+                <button class="btn btn-sm" data-goto="builder">+ Build one</button>
+              </div>
+              <div class="card-body">
+                <div class="grid g-3">
+                  <button class="app-card" data-goto="abstraction">
+                    <span class="app-ico" aria-hidden="true">&#9636;</span>
+                    <span class="app-name">Diligence Abstract</span>
+                    <span class="app-scope">Atlas only &middot; 47 docs</span>
+                  </button>
+                  <button class="app-card" data-goto="matter">
+                    <span class="app-ico" aria-hidden="true">&#10003;</span>
+                    <span class="app-name">CP &amp; Closing Tracker</span>
+                    <span class="app-scope">Atlas only &middot; 9 open</span>
+                  </button>
+                  <button class="app-card" data-goto="matter">
+                    <span class="app-ico" aria-hidden="true">&#9998;</span>
+                    <span class="app-name">Signature Packet</span>
+                    <span class="app-scope">Atlas only &middot; 11 pending</span>
+                  </button>
+                  <button class="app-card" data-goto="builder">
+                    <span class="app-ico" aria-hidden="true">&#9635;</span>
+                    <span class="app-name">Disclosure Schedules</span>
+                    <span class="app-scope">Atlas only &middot; draft</span>
+                  </button>
+                  <button class="app-card" data-goto="builder">
+                    <span class="app-ico" aria-hidden="true">&#9654;</span>
+                    <span class="app-name">NDA Turnaround</span>
+                    <span class="app-scope">All matters &middot; 4 in queue</span>
+                  </button>
+                  <button class="app-card" data-goto="trust">
+                    <span class="app-ico" aria-hidden="true">&#9678;</span>
+                    <span class="app-name">Time Capture</span>
+                    <span class="app-scope">Elite 3E &middot; 6.4h today</span>
+                  </button>
+                </div>
+              </div>
+              <div class="card-note">
+                Each app is <b>your private copy</b>, scoped to one matter. Editing yours changes nothing for anyone else.
+                Share a good one as a <b>Practice Template</b> and colleagues get their own copy.
+              </div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <!-- Feed -->
+            <div class="card">
+              <div class="card-head"><h3>Overnight</h3><span class="eyebrow">Agent activity</span></div>
+              <div class="feed">
+                <div class="feed-item"><span class="feed-time">06:12</span><span class="feed-text"><b>Diligence Agent</b> abstracted 12 new contracts from the Sunrise data room. <b>3 flagged</b> for change-of-control consent.</span></div>
+                <div class="feed-item"><span class="feed-time">05:40</span><span class="feed-text"><b>Contract Agent</b> redlined the Northwind NDA against the firm playbook. Awaiting your approval.</span></div>
+                <div class="feed-item"><span class="feed-time">04:55</span><span class="feed-text"><b>Closing Agent</b> updated the CP tracker &mdash; <b>2 conditions</b> now satisfied, 9 open.</span></div>
+                <div class="feed-item"><span class="feed-time">23:18</span><span class="feed-text"><b>Docket Agent</b> pulled 4 deadlines from Outlook into the matter calendar.</span></div>
+                <div class="feed-item"><span class="feed-time">22:02</span><span class="feed-text">Access request: <b>J. Okafor</b> asked to join ATLAS-2026. Blocked &mdash; <b>conflict screen</b>.</span></div>
+              </div>
+              <div class="card-note">Every line here is also a row in the audit ledger. <a href="#" data-goto="trust">See the ledger &rarr;</a></div>
+            </div>
+
+            <!-- Deadlines -->
+            <div class="card">
+              <div class="card-head"><h3>This week</h3><span class="eyebrow">From Outlook</span></div>
+              <div class="card-body-flush">
+                <div class="dl-item">
+                  <span class="dl-date"><b>11</b>AUG</span>
+                  <span><span class="dl-text">Diligence report to Meridian IC</span><span class="dl-sub">Project Atlas &middot; you</span></span>
+                </div>
+                <div class="dl-item">
+                  <span class="dl-date"><b>13</b>AUG</span>
+                  <span><span class="dl-text">Consent requests out to 6 counterparties</span><span class="dl-sub">Project Atlas &middot; R. Osei</span></span>
+                </div>
+                <div class="dl-item">
+                  <span class="dl-date"><b>18</b>AUG</span>
+                  <span><span class="dl-text">SPA mark-up back from seller's counsel</span><span class="dl-sub">Project Atlas &middot; external</span></span>
+                </div>
+                <div class="dl-item">
+                  <span class="dl-date"><b>21</b>AUG</span>
+                  <span><span class="dl-text">Series C term sheet expiry</span><span class="dl-sub">Meridian &middot; you</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══════ SCREEN 2 · COUNSEL ══════ -->
+      <section class="screen" id="screen-counsel" data-title="Workspace / Counsel" hidden>
+        <div class="screen-head">
+          <h1>Counsel</h1>
+          <p>An agent that only knows what you have introduced it to. Every answer cites the document
+             and clause it came from &mdash; and anything that leaves the firm stops at a gate.</p>
+        </div>
+
+        <div class="chat-wrap">
+          <div class="card">
+            <div class="caps">
+              <span class="eyebrow" style="margin-right:.2rem;">Introduced to</span>
+              <span class="cap"><b>iManage</b> &#8250; ATLAS-2026 &middot; read</span>
+              <span class="cap"><b>Data room</b> &#8250; Sunrise &middot; read</span>
+              <span class="cap"><b>Playbook</b> &#8250; Firm M&amp;A standards</span>
+              <span class="cap"><b>Outlook</b> &#8250; draft only</span>
+              <button class="cap cap-add" data-goto="connections">+ Introduce a resource</button>
+            </div>
+
+            <div class="thread">
+              <div class="msg msg-user">
+                <span class="msg-av" aria-hidden="true">DW</span>
+                <div class="msg-body">
+                  <div class="msg-who">You &middot; 08:41</div>
+                  <p>Which of the target's material contracts have change-of-control provisions that our acquisition would trigger?</p>
+                </div>
+              </div>
+
+              <div class="msg msg-agent">
+                <span class="msg-av" aria-hidden="true">DA</span>
+                <div class="msg-body">
+                  <div class="msg-who">Diligence Agent &middot; 08:41 &middot; read 47 contracts in the Sunrise data room</div>
+                  <p><strong>Six contracts are triggered.</strong> Four require counterparty consent, two require notice only.
+                     I read all 47 material contracts; the remaining 41 have no change-of-control restriction.</p>
+                  <div class="find-list">
+                    <div class="find"><span class="pill pill-stop"><span class="dot"></span> Consent</span><span class="find-name">Master Supply Agreement &mdash; Northwind Industrials</span><span class="cite" title="Clause 14.2, page 22">&sect;14.2</span></div>
+                    <div class="find"><span class="pill pill-stop"><span class="dot"></span> Consent</span><span class="find-name">Distribution Agreement &mdash; Kestrel Logistics</span><span class="cite" title="Clause 9.1, page 11">&sect;9.1</span></div>
+                    <div class="find"><span class="pill pill-stop"><span class="dot"></span> Consent</span><span class="find-name">Facility Agreement &mdash; Caledon Bank</span><span class="cite" title="Clause 22.4, page 58">&sect;22.4</span></div>
+                    <div class="find"><span class="pill pill-stop"><span class="dot"></span> Consent</span><span class="find-name">JV Agreement &mdash; Tanaka Materials KK</span><span class="cite" title="Clause 18.3, page 34">&sect;18.3</span></div>
+                    <div class="find"><span class="pill pill-warn"><span class="dot"></span> Notice</span><span class="find-name">SaaS Subscription &mdash; Vertex Analytics</span><span class="cite" title="Clause 11.5, page 8">&sect;11.5</span></div>
+                    <div class="find"><span class="pill pill-warn"><span class="dot"></span> Notice</span><span class="find-name">Commercial Lease &mdash; Sunrise Tower</span><span class="cite" title="Clause 17.2, page 41">&sect;17.2</span></div>
+                  </div>
+                  <p style="margin-top:.6rem;" class="small muted">
+                    The Caledon facility is the one to watch &mdash; &sect;22.4 makes a change of control an event of default,
+                    not merely a consent right. <a href="#" data-goto="abstraction">Open the full abstract &rarr;</a>
+                  </p>
+                </div>
+              </div>
+
+              <div class="msg msg-user">
+                <span class="msg-av" aria-hidden="true">DW</span>
+                <div class="msg-body">
+                  <div class="msg-who">You &middot; 08:46</div>
+                  <p>Draft consent request letters for the four, using our standard form. Don't send them.</p>
+                </div>
+              </div>
+
+              <div class="msg msg-agent">
+                <span class="msg-av" aria-hidden="true">DA</span>
+                <div class="msg-body">
+                  <div class="msg-who">Diligence Agent &middot; 08:46</div>
+                  <p>Four letters drafted from <b>Precedent &#8250; Consent Request (M&amp;A) v4</b>, each tailored to the
+                     counterparty's own consent clause. Filed as drafts in iManage &#8250; ATLAS-2026 &#8250; Consents.</p>
+
+                  <div class="gate">
+                    <div class="gate-head"><span aria-hidden="true">&#9888;</span> Partner approval required &mdash; this action leaves the firm</div>
+                    <div class="gate-body">
+                      <b>Requested:</b> send 4 consent request letters via Outlook to external counterparties.<br>
+                      <b>Recipients:</b> Northwind Industrials, Kestrel Logistics, Caledon Bank, Tanaka Materials KK.
+                      <div class="gate-sim">
+                        <b>Simulated outcome</b> &mdash; if you approve: 4 emails sent from your address, 4 audit entries written,
+                        CP tracker items 3&ndash;6 move to <em>Requested</em>. Nothing else changes. No client data leaves the firm's tenancy.
+                      </div>
+                    </div>
+                    <div class="gate-acts">
+                      <button class="btn btn-sm btn-primary" data-approve-gate>Approve &amp; send</button>
+                      <button class="btn btn-sm">Edit drafts</button>
+                      <button class="btn btn-sm btn-quiet">Refuse</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="composer">
+              <input class="composer-input" id="composerInput" placeholder="Ask about this matter&hellip;" aria-label="Message the agent">
+              <button class="btn btn-primary" id="composerSend">Send</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>Try asking</h3></div>
+              <div class="card-body">
+                <button class="suggest" data-fill="Compare the seller's SPA mark-up against our last three deals.">Compare the seller's SPA mark-up against our last three deals.</button>
+                <button class="suggest" data-fill="What's still outstanding before we can sign?">What's still outstanding before we can sign?</button>
+                <button class="suggest" data-fill="Build me a tracker for the consent responses.">Build me a tracker for the consent responses.</button>
+                <button class="suggest" data-fill="Summarise the data room for the investment committee.">Summarise the data room for the investment committee.</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>What it cannot do</h3></div>
+              <div class="card-body">
+                <p class="side-note">
+                  This agent has <b>no ambient access</b>. It cannot search other clients' matters, cannot see
+                  matters behind an ethical wall, cannot send email, cannot delete from the DMS, and cannot
+                  reach the open internet unless you hand it a specific resource.
+                </p>
+                <p class="side-note" style="margin-top:.6rem;">
+                  Nothing you or it writes here is used to train a model.
+                </p>
+                <button class="btn btn-sm" data-goto="connections" style="margin-top:.7rem;">See its permissions</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ SCREEN 3 · MATTER ══════ -->
+      <section class="screen" id="screen-matter" data-title="Workspace / Matter" hidden>
+        <div class="screen-head">
+          <h1>Project Atlas</h1>
+          <p>Everything for one deal in one place &mdash; documents, conditions, team, deadlines and the agents working on it.</p>
+        </div>
+
+        <div class="banner banner-warn">
+          <span aria-hidden="true">&#9899;</span>
+          <span><b>Ethical wall in force.</b> Two members of the firm are screened from this matter
+            (Sunrise Holdings is adverse to an existing client). Their agents cannot read anything here,
+            and search results are filtered before they are shown. <a href="#" data-goto="trust">Manage screens &rarr;</a></span>
+        </div>
+
+        <div class="matter-hero">
+          <div class="row-between wrap">
+            <div>
+              <h2>Acquisition of Sunrise Holdings Ltd</h2>
+              <p class="small muted" style="margin-top:.2rem;">Buy-side M&amp;A &middot; share purchase &middot; &pound;180m enterprise value</p>
+            </div>
+            <div class="row wrap">
+              <span class="pill pill-info"><span class="dot"></span> Diligence</span>
+              <button class="btn btn-sm" data-goto="counsel">Ask Counsel</button>
+              <button class="btn btn-sm btn-primary" data-goto="abstraction">Open abstract</button>
+            </div>
+          </div>
+          <div class="meta-grid">
+            <div><div class="meta-k">Client</div><div class="meta-v">Meridian Capital Partners</div></div>
+            <div><div class="meta-k">Matter</div><div class="meta-v mono" style="font-size:12px;">ATLAS-2026</div></div>
+            <div><div class="meta-k">Signing target</div><div class="meta-v">14 Sep 2026</div></div>
+            <div><div class="meta-k">Responsible partner</div><div class="meta-v">Dana Whitfield</div></div>
+          </div>
+        </div>
+
+        <div class="grid g-2 g-split" style="align-items:start;">
+          <div class="stack">
+            <div class="card">
+              <div class="card-head">
+                <h3>Conditions &amp; closing checklist</h3>
+                <span class="pill">4 of 13 satisfied</span>
+              </div>
+              <div class="card-body-flush">
+                <div class="ck is-done"><span class="ck-box done" aria-hidden="true">&#10003;</span><span class="ck-name">Engagement letter &amp; conflicts clearance</span><span class="ck-owner">DW</span></div>
+                <div class="ck is-done"><span class="ck-box done" aria-hidden="true">&#10003;</span><span class="ck-name">Data room access granted &amp; indexed</span><span class="ck-owner">R.OSEI</span></div>
+                <div class="ck is-done"><span class="ck-box done" aria-hidden="true">&#10003;</span><span class="ck-name">Corporate records reviewed &mdash; no defects</span><span class="ck-owner">AGENT</span></div>
+                <div class="ck is-done"><span class="ck-box done" aria-hidden="true">&#10003;</span><span class="ck-name">Material contracts abstracted (47 of 47)</span><span class="ck-owner">AGENT</span></div>
+                <div class="ck"><span class="ck-box part" aria-hidden="true">&ndash;</span><span class="ck-name">Change-of-control consents &mdash; 4 requested, 0 received</span><span class="ck-owner">R.OSEI</span></div>
+                <div class="ck"><span class="ck-box part" aria-hidden="true">&ndash;</span><span class="ck-name">Disclosure schedules &mdash; first draft circulated</span><span class="ck-owner">L.HARDING</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">SPA mark-up returned by seller's counsel</span><span class="ck-owner">EXTERNAL</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">Caledon facility &mdash; waiver or refinancing agreed</span><span class="ck-owner">DW</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">Employment &amp; key-person arrangements confirmed</span><span class="ck-owner">L.HARDING</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">Antitrust filing &mdash; threshold assessment</span><span class="ck-owner">EXTERNAL</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">Board &amp; shareholder approvals</span><span class="ck-owner">DW</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">Signature packets assembled &amp; circulated</span><span class="ck-owner">AGENT</span></div>
+                <div class="ck"><span class="ck-box" aria-hidden="true"></span><span class="ck-name">Funds flow &amp; completion mechanics agreed</span><span class="ck-owner">DW</span></div>
+              </div>
+              <div class="card-note">
+                Rows marked <b>AGENT</b> are maintained automatically &mdash; the abstraction run writes straight into this
+                checklist. A human still ticks anything that binds the client.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Data room</h3><span class="eyebrow">Sunrise Holdings &middot; read-only</span></div>
+              <div class="card-body">
+                <div class="row-between">
+                  <span class="small"><b>47 of 52</b> documents ingested and abstracted</span>
+                  <span class="tiny muted">5 scanned PDFs queued for OCR</span>
+                </div>
+                <div class="progress"><span style="width:90%;"></span></div>
+                <div class="grid g-3" style="margin-top:.9rem;">
+                  <div><div class="meta-k">Commercial</div><div class="meta-v">18 docs</div></div>
+                  <div><div class="meta-k">Corporate</div><div class="meta-v">11 docs</div></div>
+                  <div><div class="meta-k">Finance</div><div class="meta-v">7 docs</div></div>
+                  <div><div class="meta-k">Employment</div><div class="meta-v">9 docs</div></div>
+                  <div><div class="meta-k">Property</div><div class="meta-v">4 docs</div></div>
+                  <div><div class="meta-k">IP &amp; IT</div><div class="meta-v">3 docs</div></div>
+                </div>
+              </div>
+              <div class="card-note">Ingest is one-way. The agent can read the data room; it cannot write to it or expose it to another matter.</div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>Deal team</h3><button class="btn btn-sm">+ Add</button></div>
+              <div class="card-body-flush">
+                <div class="team"><span class="team-av">DW</span><span><span class="team-n">Dana Whitfield</span><br><span class="team-r">Partner &middot; responsible</span></span></div>
+                <div class="team"><span class="team-av">RO</span><span><span class="team-n">Rafi Osei</span><br><span class="team-r">Senior associate</span></span></div>
+                <div class="team"><span class="team-av">LH</span><span><span class="team-n">Lena Harding</span><br><span class="team-r">Associate</span></span></div>
+                <div class="team"><span class="team-av">MP</span><span><span class="team-n">Marcus Pell</span><br><span class="team-r">Paralegal &middot; read-only</span></span></div>
+                <div class="team"><span class="team-av">&#9679;</span><span><span class="team-n">3 agents</span><br><span class="team-r">Diligence, Closing, Contract</span></span></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Apps on this matter</h3><button class="btn btn-sm" data-goto="builder">+ Install</button></div>
+              <div class="card-body">
+                <div class="grid g-2">
+                  <button class="app-card" data-goto="abstraction"><span class="app-ico" aria-hidden="true">&#9636;</span><span class="app-name">Diligence Abstract</span><span class="app-scope">from template v4</span></button>
+                  <button class="app-card"><span class="app-ico" aria-hidden="true">&#10003;</span><span class="app-name">CP Tracker</span><span class="app-scope">from template v2</span></button>
+                  <button class="app-card"><span class="app-ico" aria-hidden="true">&#9998;</span><span class="app-name">Signature Packet</span><span class="app-scope">customised by you</span></button>
+                  <button class="app-card" data-goto="builder"><span class="app-ico" aria-hidden="true">&#9635;</span><span class="app-name">Disclosure Builder</span><span class="app-scope">draft</span></button>
+                </div>
+              </div>
+              <div class="card-note">These are private instances. Yours are yours &mdash; Rafi's copy of the CP Tracker looks however he wants it to.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Time captured</h3><span class="eyebrow">Elite 3E</span></div>
+              <div class="card-body">
+                <div class="row-between"><span class="small">Today &middot; this matter</span><span class="mono">4.2 h</span></div>
+                <div class="row-between" style="margin-top:.4rem;"><span class="small">Drafted by agent, unreviewed</span><span class="mono">1.1 h</span></div>
+                <button class="btn btn-sm" style="margin-top:.7rem;">Review &amp; post</button>
+              </div>
+              <div class="card-note">Narratives are drafted from what actually happened in the matter. Nothing posts to the bill without you.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ SCREEN 4 · ABSTRACTION ══════ -->
+      <section class="screen" id="screen-abstraction" data-title="Tools / Abstraction" hidden>
+        <div class="screen-head">
+          <h1>Abstraction</h1>
+          <p>Forty-seven contracts read overnight and reduced to the points that matter.
+             Every value cites the clause it came from &mdash; nothing is asserted without a source.</p>
+        </div>
+
+        <div class="abs-wrap">
+          <div class="card">
+            <div class="toolbar">
+              <span class="select-fake">Source: <b>Sunrise data room</b> &#9662;</span>
+              <span class="select-fake">Type: <b>Commercial contracts</b> &#9662;</span>
+              <span class="select-fake">Playbook: <b>Firm M&amp;A standards</b> &#9662;</span>
+              <span style="flex:1;"></span>
+              <button class="btn btn-sm">Re-run</button>
+              <button class="btn btn-sm">Export to Excel</button>
+              <button class="btn btn-sm btn-primary" data-goto="matter">Push to checklist</button>
+            </div>
+
+            <div class="row-between" style="padding:.6rem 1rem; border-bottom:1px solid var(--line-2);">
+              <span class="small"><b>8</b> of 47 shown &middot; filtered to change-of-control relevance</span>
+              <span class="row wrap" style="gap:.35rem;">
+                <span class="pill pill-stop"><span class="dot"></span> 4 consent</span>
+                <span class="pill pill-warn"><span class="dot"></span> 2 notice</span>
+                <span class="pill pill-info"><span class="dot"></span> 2 review</span>
+              </span>
+            </div>
+
+            <div class="table-scroll">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th scope="col">Contract</th>
+                    <th scope="col">Change of control</th>
+                    <th scope="col">Assignment</th>
+                    <th scope="col">Term / expiry</th>
+                    <th scope="col">Governing law</th>
+                    <th scope="col">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody id="absBody">
+                  <tr class="active" data-doc="northwind">
+                    <td><span class="doc-name">Master Supply Agreement</span><span class="cell-sub tiny muted">Northwind Industrials plc</span><span class="doc-path">03_Commercial / MSA_Northwind_2023.pdf</span></td>
+                    <td><span class="pill pill-stop"><span class="dot"></span> Consent required</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 14.2, page 22">&sect;14.2</span></span></td>
+                    <td><span class="cell-main">Not without consent</span><span class="cell-sub"><span class="cite" title="Clause 14.1, page 22">&sect;14.1</span></span></td>
+                    <td><span class="cell-main">31 Dec 2028</span><span class="cell-sub tiny muted">auto-renew 2 yrs</span></td>
+                    <td><span class="cell-main">England &amp; Wales</span></td>
+                    <td><span class="conf"><span class="conf-bar"><i style="width:96%"></i></span> 96%</span></td>
+                  </tr>
+                  <tr data-doc="kestrel">
+                    <td><span class="doc-name">Distribution Agreement</span><span class="cell-sub tiny muted">Kestrel Logistics BV</span><span class="doc-path">03_Commercial / Dist_Kestrel_2024.pdf</span></td>
+                    <td><span class="pill pill-stop"><span class="dot"></span> Consent required</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 9.1, page 11">&sect;9.1</span></span></td>
+                    <td><span class="cell-main">Group companies only</span><span class="cell-sub"><span class="cite" title="Clause 9.3, page 12">&sect;9.3</span></span></td>
+                    <td><span class="cell-main">14 Mar 2027</span></td>
+                    <td><span class="cell-main">Netherlands</span></td>
+                    <td><span class="conf"><span class="conf-bar"><i style="width:94%"></i></span> 94%</span></td>
+                  </tr>
+                  <tr data-doc="caledon">
+                    <td><span class="doc-name">Facility Agreement</span><span class="cell-sub tiny muted">Caledon Bank</span><span class="doc-path">05_Finance / Facility_Caledon_2022.pdf</span></td>
+                    <td><span class="pill pill-stop"><span class="dot"></span> Event of default</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 22.4, page 58">&sect;22.4</span></span></td>
+                    <td><span class="cell-main">Prohibited</span><span class="cell-sub"><span class="cite" title="Clause 24.1, page 61">&sect;24.1</span></span></td>
+                    <td><span class="cell-main">30 Jun 2029</span><span class="cell-sub tiny muted">&pound;45m drawn</span></td>
+                    <td><span class="cell-main">England &amp; Wales</span></td>
+                    <td><span class="conf"><span class="conf-bar"><i style="width:98%"></i></span> 98%</span></td>
+                  </tr>
+                  <tr data-doc="tanaka">
+                    <td><span class="doc-name">Joint Venture Agreement</span><span class="cell-sub tiny muted">Tanaka Materials KK</span><span class="doc-path">02_Corporate / JV_Tanaka_2021.pdf</span></td>
+                    <td><span class="pill pill-stop"><span class="dot"></span> Consent required</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 18.3, page 34">&sect;18.3</span></span></td>
+                    <td><span class="cell-main">Pre-emption applies</span><span class="cell-sub"><span class="cite" title="Clause 18.5, page 35">&sect;18.5</span></span></td>
+                    <td><span class="cell-main">No fixed term</span></td>
+                    <td><span class="cell-main">Japan</span></td>
+                    <td><span class="conf conf-low"><span class="conf-bar"><i style="width:71%"></i></span> 71%</span></td>
+                  </tr>
+                  <tr data-doc="vertex">
+                    <td><span class="doc-name">SaaS Subscription</span><span class="cell-sub tiny muted">Vertex Analytics Inc</span><span class="doc-path">07_IT / SaaS_Vertex_2025.pdf</span></td>
+                    <td><span class="pill pill-warn"><span class="dot"></span> Notice only</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 11.5, page 8">&sect;11.5</span></span></td>
+                    <td><span class="cell-main">Permitted on notice</span><span class="cell-sub"><span class="cite" title="Clause 11.4, page 8">&sect;11.4</span></span></td>
+                    <td><span class="cell-main">09 Nov 2026</span><span class="cell-sub tiny muted">auto-renew 1 yr</span></td>
+                    <td><span class="cell-main">Delaware</span></td>
+                    <td><span class="conf"><span class="conf-bar"><i style="width:92%"></i></span> 92%</span></td>
+                  </tr>
+                  <tr data-doc="tower">
+                    <td><span class="doc-name">Commercial Lease</span><span class="cell-sub tiny muted">Sunrise Tower, Floors 8&ndash;11</span><span class="doc-path">06_Property / Lease_SunriseTower.pdf</span></td>
+                    <td><span class="pill pill-warn"><span class="dot"></span> Notice only</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 17.2, page 41">&sect;17.2</span></span></td>
+                    <td><span class="cell-main">Landlord consent</span><span class="cell-sub"><span class="cite" title="Clause 17.1, page 40">&sect;17.1</span></span></td>
+                    <td><span class="cell-main">28 Feb 2034</span><span class="cell-sub tiny muted">break 2029</span></td>
+                    <td><span class="cell-main">England &amp; Wales</span></td>
+                    <td><span class="conf"><span class="conf-bar"><i style="width:95%"></i></span> 95%</span></td>
+                  </tr>
+                  <tr data-doc="ashfield">
+                    <td><span class="doc-name">Reseller Agreement</span><span class="cell-sub tiny muted">Ashfield Group Ltd</span><span class="doc-path">03_Commercial / Reseller_Ashfield.pdf</span></td>
+                    <td><span class="pill pill-info"><span class="dot"></span> Needs review</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 12, page 15 — scanned, OCR confidence low">&sect;12?</span></span></td>
+                    <td><span class="cell-main muted">Unclear &mdash; scanned</span></td>
+                    <td><span class="cell-main">31 Aug 2027</span></td>
+                    <td><span class="cell-main">Scotland</span></td>
+                    <td><span class="conf conf-low"><span class="conf-bar"><i style="width:54%"></i></span> 54%</span></td>
+                  </tr>
+                  <tr data-doc="cto">
+                    <td><span class="doc-name">Service Agreement &mdash; CTO</span><span class="cell-sub tiny muted">A. Ferreira</span><span class="doc-path">04_Employment / SA_Ferreira_2023.pdf</span></td>
+                    <td><span class="pill pill-info"><span class="dot"></span> Needs review</span><span class="cell-sub" style="margin-top:.3rem;"><span class="cite" title="Clause 8.6, page 6">&sect;8.6</span></span></td>
+                    <td><span class="cell-main">Personal &mdash; n/a</span></td>
+                    <td><span class="cell-main">Rolling, 12 mo notice</span><span class="cell-sub tiny muted">good-leaver on CoC</span></td>
+                    <td><span class="cell-main">England &amp; Wales</span></td>
+                    <td><span class="conf conf-low"><span class="conf-bar"><i style="width:68%"></i></span> 68%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card-note">
+              Anything below 80% confidence is surfaced for review rather than silently accepted.
+              Two scanned documents are still queued for OCR. <b>Hover any clause reference to see the page.</b>
+            </div>
+          </div>
+
+          <!-- Detail panel -->
+          <div class="stack">
+            <div class="card">
+              <div class="card-head">
+                <h3 id="detailTitle">Master Supply Agreement</h3>
+                <span class="pill pill-stop" id="detailFlag"><span class="dot"></span> Consent</span>
+              </div>
+              <div class="card-body">
+                <div class="detail-k">Counterparty</div>
+                <div class="detail-v" id="detailParty">Northwind Industrials plc</div>
+
+                <div class="detail-k">Change of control</div>
+                <div class="detail-v" id="detailCoc">
+                  <span>Consent of the counterparty required; consent not to be unreasonably withheld.</span>
+                  <span class="cite" title="Clause 14.2, page 22">&sect;14.2</span>
+                </div>
+
+                <div class="detail-k">Consequence if breached</div>
+                <div class="detail-v" id="detailBreach"><span>Termination on 30 days' notice.</span><span class="cite" title="Clause 15.1, page 24">&sect;15.1</span></div>
+
+                <div class="detail-k">Value to the target</div>
+                <div class="detail-v" id="detailValue">&pound;12.4m annual revenue &mdash; largest single supply relationship</div>
+
+                <div class="detail-k">Off-market against firm playbook</div>
+                <div class="detail-v" id="detailOff">
+                  <span class="pill pill-warn"><span class="dot"></span> 1 deviation</span>
+                  <span class="tiny muted">Consent right is unqualified in favour of the counterparty on insolvency.</span>
+                </div>
+
+                <div class="detail-k">Source</div>
+                <div class="detail-v mono tiny" id="detailSrc">Sunrise DR / 03_Commercial / MSA_Northwind_2023.pdf</div>
+
+                <div class="verify-box">
+                  <div class="row-between">
+                    <span>Reviewed by a lawyer?</span>
+                    <span class="pill pill-warn"><span class="dot"></span> Not yet</span>
+                  </div>
+                  <div class="row" style="margin-top:.6rem; gap:.35rem;">
+                    <button class="btn btn-sm btn-primary">Verify</button>
+                    <button class="btn btn-sm">Open document</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>What this replaces</h3></div>
+              <div class="card-body">
+                <p class="side-note">
+                  Reading 47 contracts for change-of-control provisions is roughly <b>three days</b> of associate time.
+                  The abstraction ran in <b>eleven minutes</b> overnight.
+                </p>
+                <p class="side-note" style="margin-top:.6rem;">
+                  It is a <b>first pass, not an opinion.</b> The value is that the lawyer starts from a cited table
+                  instead of a pile of PDFs &mdash; and can see exactly which entries need a human eye.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ SCREEN 5 · BUILDER ══════ -->
+      <section class="screen" id="screen-builder" data-title="Tools / Builder" hidden>
+        <div class="screen-head">
+          <h1>Builder</h1>
+          <p>Assemble an agent out of blocks. No code, no engineer, no ticket &mdash; and no way to remove
+             the approval gate if you are not a partner.</p>
+        </div>
+
+        <div class="build-wrap">
+          <div class="card">
+            <div class="toolbar">
+              <span class="select-fake">Workflow: <b>Atlas &mdash; new document intake</b> &#9662;</span>
+              <span class="pill pill-ok"><span class="dot"></span> Live</span>
+              <span style="flex:1;"></span>
+              <button class="btn btn-sm">Test run</button>
+              <button class="btn btn-sm">Save as Practice Template</button>
+            </div>
+
+            <div class="canvas">
+              <div class="flow" id="flow">
+                <div class="block block-trigger">
+                  <span class="block-ico" aria-hidden="true">&#9654;</span>
+                  <span><span class="block-t">When a document lands in the Sunrise data room</span>
+                    <span class="block-d">Watches the data room folder. Fires once per new file.</span>
+                    <span class="block-tag">TRIGGER &middot; data room (read)</span></span>
+                </div>
+                <div class="conn"></div>
+                <div class="block">
+                  <span class="block-ico" aria-hidden="true">&#9635;</span>
+                  <span><span class="block-t">Classify the document</span>
+                    <span class="block-d">Contract, corporate record, financial statement or other. OCR first if scanned.</span>
+                    <span class="block-tag">CLASSIFY</span></span>
+                </div>
+                <div class="conn"></div>
+                <div class="block">
+                  <span class="block-ico" aria-hidden="true">&#9636;</span>
+                  <span><span class="block-t">Abstract the deal points</span>
+                    <span class="block-d">Parties, term, change of control, assignment, exclusivity, governing law, termination &mdash; each with its clause reference.</span>
+                    <span class="block-tag">ABSTRACT &middot; writes to Diligence Abstract</span></span>
+                </div>
+                <div class="conn"></div>
+                <div class="block">
+                  <span class="block-ico" aria-hidden="true">&#8644;</span>
+                  <span><span class="block-t">Compare against the firm playbook</span>
+                    <span class="block-d">Flag anything off-market versus Firm M&amp;A standards v7.</span>
+                    <span class="block-tag">COMPARE &middot; playbook (read)</span></span>
+                </div>
+                <div class="conn"></div>
+                <div class="block">
+                  <span class="block-ico" aria-hidden="true">&#9878;</span>
+                  <span><span class="block-t">If consent is required &rarr; draft the consent request</span>
+                    <span class="block-d">From Precedent &#8250; Consent Request (M&amp;A) v4, tailored to the counterparty's clause.</span>
+                    <span class="block-tag">DRAFT &middot; saves to iManage as draft</span></span>
+                </div>
+                <div class="conn"></div>
+                <div class="block block-gate">
+                  <span class="block-ico" aria-hidden="true">&#9888;</span>
+                  <span><span class="block-t">Partner approval gate</span>
+                    <span class="block-d">Anything leaving the firm stops here. The partner sees the simulated outcome before deciding.</span>
+                    <span class="block-tag">APPROVAL &middot; required by firm policy</span></span>
+                  <span class="lock" title="Locked by firm policy">&#128274; LOCKED</span>
+                </div>
+                <div class="conn"></div>
+                <div class="block">
+                  <span class="block-ico" aria-hidden="true">&#10003;</span>
+                  <span><span class="block-t">Update the CP tracker and file to iManage</span>
+                    <span class="block-d">Move the matching condition to <em>Requested</em> and file the letter under ATLAS-2026 &#8250; Consents.</span>
+                    <span class="block-tag">WRITE &middot; iManage (draft + final)</span></span>
+                </div>
+                <div class="conn"></div>
+                <div class="block">
+                  <span class="block-ico" aria-hidden="true">&#9993;</span>
+                  <span><span class="block-t">Notify the deal team in Slack</span>
+                    <span class="block-d">Post to #project-atlas. Client-identifying detail redacted automatically.</span>
+                    <span class="block-tag">NOTIFY &middot; Slack (one channel)</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="card-note">
+              This is the same workflow that produced last night's abstraction run. Change a block and it applies to
+              <b>your copy only</b> until you publish it as a Practice Template.
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3>Blocks</h3><span class="eyebrow">Click to add</span></div>
+              <div class="card-body">
+                <button class="palette-item" data-block="Retrieve from the DMS|Pull precedents or prior deal documents by matter, client or clause.|RETRIEVE"><span class="block-ico" aria-hidden="true">&#9906;</span> Retrieve</button>
+                <button class="palette-item" data-block="Summarise for a named audience|Rewrite for the client, the board or the investment committee.|SUMMARISE"><span class="block-ico" aria-hidden="true">&#9776;</span> Summarise</button>
+                <button class="palette-item" data-block="Redline against our standard|Mark up a counterparty draft and explain each change.|REDLINE"><span class="block-ico" aria-hidden="true">&#9998;</span> Redline</button>
+                <button class="palette-item" data-block="Wait for a response|Pause until the counterparty replies, or escalate after a set period.|WAIT"><span class="block-ico" aria-hidden="true">&#9202;</span> Wait / chase</button>
+                <button class="palette-item" data-block="Capture time|Draft a billing narrative from what actually happened. Never posts without review.|TIME"><span class="block-ico" aria-hidden="true">&#9678;</span> Capture time</button>
+                <button class="palette-item" data-block="Second approval gate|Require a named partner to approve before the next step runs.|APPROVAL"><span class="block-ico" aria-hidden="true">&#9888;</span> Approval gate</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Practice Templates</h3><span class="eyebrow">Firm library</span></div>
+              <div class="card-body-flush">
+                <div class="bp"><div class="bp-body"><div class="bp-n">Buy-side Diligence Room</div><div class="bp-d">Intake, abstraction, CP tracker, consent letters. 41 installs.</div></div><button class="btn btn-sm">Install</button></div>
+                <div class="bp"><div class="bp-body"><div class="bp-n">NDA Turnaround</div><div class="bp-d">Redline to firm standard, partner gate, return. 128 installs.</div></div><button class="btn btn-sm">Install</button></div>
+                <div class="bp"><div class="bp-body"><div class="bp-n">Disclosure Schedule Builder</div><div class="bp-d">Warranty-by-warranty drafting from the data room. 17 installs.</div></div><button class="btn btn-sm">Install</button></div>
+                <div class="bp"><div class="bp-body"><div class="bp-n">Vendor MSA Review</div><div class="bp-d">In-house style triage with a risk score. 63 installs.</div></div><button class="btn btn-sm">Install</button></div>
+              </div>
+              <div class="card-note">
+                Installing gives you your <b>own copy</b> to change freely. It does not give you the author's data,
+                and it cannot widen your permissions.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ SCREEN 6 · CONNECTIONS ══════ -->
+      <section class="screen" id="screen-connections" data-title="Governance / Connections" hidden>
+        <div class="screen-head">
+          <h1>Connections</h1>
+          <p>The systems the firm already runs, wired in one at a time &mdash; each with a scope you choose,
+             a log you can read, and a gate where it matters.</p>
+        </div>
+
+        <div class="banner">
+          <span aria-hidden="true">&#9432;</span>
+          <span><b>Zero ambient access.</b> An agent can reach nothing until you introduce it to a specific resource,
+            and then only within the scope granted. There is no &ldquo;connect everything&rdquo; switch, by design.</span>
+        </div>
+
+        <div class="grid g-2">
+
+          <div class="card conn-card">
+            <div class="conn-head">
+              <span class="conn-logo" aria-hidden="true">iM</span>
+              <span style="flex:1;"><span class="conn-n">iManage</span><br><span class="conn-cat">Document management</span></span>
+              <span class="pill pill-ok"><span class="dot"></span> Connected</span>
+            </div>
+            <div class="scope-list">
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Read workspace <b>ATLAS-2026</b> only &mdash; no cross-matter search</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Create and edit <b>drafts</b></span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot delete or overwrite a final version</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot read matters behind an ethical wall</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Filing a final document requires <b>partner approval</b></span></div>
+            </div>
+            <div class="conn-foot"><span>1,284 actions logged &middot; 30 days</span><span style="margin-left:auto;"><button class="btn btn-sm" data-goto="trust">Audit</button> <button class="btn btn-sm">Edit scope</button></span></div>
+          </div>
+
+          <div class="card conn-card">
+            <div class="conn-head">
+              <span class="conn-logo" aria-hidden="true">M365</span>
+              <span style="flex:1;"><span class="conn-n">Microsoft 365 &amp; Outlook</span><br><span class="conn-cat">Mail, calendar, documents</span></span>
+              <span class="pill pill-ok"><span class="dot"></span> Connected</span>
+            </div>
+            <div class="scope-list">
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Read mail <b>threads tagged to a matter</b> only</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Read calendar for deadlines and court dates</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span><b>Draft</b> replies into your drafts folder</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span><b>Cannot send</b> &mdash; every send stops at the approval gate</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot read your personal or firm-management mail</span></div>
+            </div>
+            <div class="conn-foot"><span>412 actions logged &middot; 30 days</span><span style="margin-left:auto;"><button class="btn btn-sm" data-goto="trust">Audit</button> <button class="btn btn-sm">Edit scope</button></span></div>
+          </div>
+
+          <div class="card conn-card">
+            <div class="conn-head">
+              <span class="conn-logo" aria-hidden="true">Sl</span>
+              <span style="flex:1;"><span class="conn-n">Slack</span><br><span class="conn-cat">Team messaging</span></span>
+              <span class="pill pill-ok"><span class="dot"></span> Connected</span>
+            </div>
+            <div class="scope-list">
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Post to <b>#project-atlas</b> and DM the deal team</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Accept instructions from the deal team by DM</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Redact client-identifying detail before posting</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot post to firm-wide or client-shared channels</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot read channels it was not invited to</span></div>
+            </div>
+            <div class="conn-foot"><span>96 actions logged &middot; 30 days</span><span style="margin-left:auto;"><button class="btn btn-sm" data-goto="trust">Audit</button> <button class="btn btn-sm">Edit scope</button></span></div>
+          </div>
+
+          <div class="card conn-card">
+            <div class="conn-head">
+              <span class="conn-logo" aria-hidden="true">DS</span>
+              <span style="flex:1;"><span class="conn-n">DocuSign</span><br><span class="conn-cat">Execution &amp; e-signature</span></span>
+              <span class="pill pill-ok"><span class="dot"></span> Connected</span>
+            </div>
+            <div class="scope-list">
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Assemble signature packets from matter documents</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Read envelope status back into the closing checklist</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span><b>Cannot send an envelope</b> without partner approval</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot void or alter an executed envelope</span></div>
+            </div>
+            <div class="conn-foot"><span>38 actions logged &middot; 30 days</span><span style="margin-left:auto;"><button class="btn btn-sm" data-goto="trust">Audit</button> <button class="btn btn-sm">Edit scope</button></span></div>
+          </div>
+
+          <div class="card conn-card">
+            <div class="conn-head">
+              <span class="conn-logo" aria-hidden="true">3E</span>
+              <span style="flex:1;"><span class="conn-n">Elite 3E</span><br><span class="conn-cat">Practice management &amp; billing</span></span>
+              <span class="pill pill-ok"><span class="dot"></span> Connected</span>
+            </div>
+            <div class="scope-list">
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Read matter, client and conflicts data</span></div>
+              <div class="scope"><span class="scope-ico">&#10003;</span><span>Draft time entries for <b>ATLAS-2026</b></span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot post time or raise a bill</span></div>
+              <div class="scope scope-no"><span class="scope-ico">&#10007;</span><span>Cannot read rates or partner compensation</span></div>
+            </div>
+            <div class="conn-foot"><span>221 actions logged &middot; 30 days</span><span style="margin-left:auto;"><button class="btn btn-sm" data-goto="trust">Audit</button> <button class="btn btn-sm">Edit scope</button></span></div>
+          </div>
+
+          <div class="card conn-card">
+            <div class="conn-head">
+              <span class="conn-logo" aria-hidden="true">ND</span>
+              <span style="flex:1;"><span class="conn-n">NetDocuments</span><br><span class="conn-cat">Document management</span></span>
+              <span class="pill"><span class="dot" style="color:var(--faint);"></span> Available</span>
+            </div>
+            <div class="scope-list">
+              <div class="scope"><span class="scope-ico" style="color:var(--faint);">&#9675;</span><span class="muted">Not connected. Firms running NetDocuments instead of iManage connect it here.</span></div>
+              <div class="scope"><span class="scope-ico" style="color:var(--faint);">&#9675;</span><span class="muted">Same scoping model &mdash; workspace-level, no ambient search.</span></div>
+            </div>
+            <div class="conn-foot"><span>Requires IT approval</span><span style="margin-left:auto;"><button class="btn btn-sm btn-primary">Connect</button></span></div>
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <div class="card-head"><h3>Not yet connected</h3><span class="eyebrow">Roadmap</span></div>
+          <div class="card-body">
+            <div class="row wrap" style="gap:.4rem;">
+              <span class="pill">Westlaw / Lexis+</span>
+              <span class="pill">Relativity</span>
+              <span class="pill">Datasite VDR</span>
+              <span class="pill">Intapp conflicts</span>
+              <span class="pill">Companies House</span>
+              <span class="pill">Firm precedent bank</span>
+              <span class="pill">HighQ</span>
+              <span class="pill">Litera</span>
+            </div>
+            <p class="side-note" style="margin-top:.7rem;">
+              Each of these is a connector with the same three properties: a narrow scope, a full log, and an
+              approval gate on anything consequential. Adding one never widens what an existing agent can reach.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ SCREEN 7 · TRUST ══════ -->
+      <section class="screen" id="screen-trust" data-title="Governance / Trust &amp; Audit" hidden>
+        <div class="screen-head">
+          <h1>Trust &amp; Audit</h1>
+          <p>The screen the firm's risk partner and general counsel will ask to see first.</p>
+        </div>
+
+        <div class="grid g-2" style="align-items:start; margin-bottom:1rem;">
+          <div class="card">
+            <div class="card-head"><h3>Ethical walls &amp; conflict screens</h3><button class="btn btn-sm">+ New screen</button></div>
+            <div class="card-body-flush">
+              <div class="wall">
+                <span class="pill pill-stop"><span class="dot"></span> Active</span>
+                <span style="flex:1;"><span class="team-n">ATLAS-2026 &nbsp;&#8942;&nbsp; Halberd Group matters</span><br><span class="team-r">2 people and their agents screened &middot; since 04 Jun 2026</span></span>
+              </div>
+              <div class="wall">
+                <span class="pill pill-stop"><span class="dot"></span> Active</span>
+                <span style="flex:1;"><span class="team-n">MERI-4471 &nbsp;&#8942;&nbsp; Corporate finance team</span><br><span class="team-r">Price-sensitive information &middot; 11 people screened</span></span>
+              </div>
+              <div class="wall">
+                <span class="pill pill-warn"><span class="dot"></span> Pending</span>
+                <span style="flex:1;"><span class="team-n">New instruction &mdash; Vertex Analytics</span><br><span class="team-r">Conflicts check running against 3E &middot; matter cannot open until cleared</span></span>
+              </div>
+            </div>
+            <div class="card-note">
+              A screen applies to the person <b>and every agent acting for them</b>. Screened content never enters
+              a prompt &mdash; it is filtered at retrieval, not after generation.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Assurances</h3></div>
+            <div class="card-body">
+              <div class="assure"><span style="color:var(--ok);">&#10003;</span><span><b>No client data trains any model.</b> Prompts and documents are not retained by the model provider.</span></div>
+              <div class="assure"><span style="color:var(--ok);">&#10003;</span><span><b>Privilege preserved.</b> Agent working papers are held within the matter and marked privileged and confidential.</span></div>
+              <div class="assure"><span style="color:var(--ok);">&#10003;</span><span><b>Data residency: UK &amp; EU.</b> Processing pinned to the firm's tenancy; no transfer outside without a partner decision.</span></div>
+              <div class="assure"><span style="color:var(--ok);">&#10003;</span><span><b>Every action logged, append-only.</b> The ledger cannot be edited, including by firm IT.</span></div>
+              <div class="assure"><span style="color:var(--ok);">&#10003;</span><span><b>Confidentiality by construction.</b> Scoping enforces ABA Model Rule 1.6 / SRA duties of confidentiality &mdash; it does not rely on the agent choosing well.</span></div>
+              <div class="assure"><span style="color:var(--warn);">&#9888;</span><span><b>Supervision remains yours.</b> Output is a first draft. The signature, the advice and the responsibility stay with the lawyer.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Activity ledger</h3>
+            <span class="row wrap" style="gap:.4rem;">
+              <span class="select-fake">Matter: <b>ATLAS-2026</b> &#9662;</span>
+              <button class="btn btn-sm">Export</button>
+            </span>
+          </div>
+          <div class="table-scroll">
+            <table class="tbl ledger">
+              <thead>
+                <tr>
+                  <th scope="col">Time</th><th scope="col">Actor</th><th scope="col">Action</th>
+                  <th scope="col">Resource</th><th scope="col">Outcome</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>08:46:12</td><td>Diligence Agent</td><td>Requested send of 4 consent letters</td><td>Outlook</td><td><span class="pill pill-warn"><span class="dot"></span> Awaiting partner</span></td></tr>
+                <tr><td>08:46:02</td><td>Diligence Agent</td><td>Created 4 drafts from precedent v4</td><td>iManage / ATLAS-2026</td><td><span class="pill pill-ok"><span class="dot"></span> Allowed</span></td></tr>
+                <tr><td>08:41:37</td><td>Diligence Agent</td><td>Read 47 contracts</td><td>Data room / Sunrise</td><td><span class="pill pill-ok"><span class="dot"></span> Allowed</span></td></tr>
+                <tr><td>06:12:44</td><td>Diligence Agent</td><td>Abstracted 12 documents</td><td>Data room / Sunrise</td><td><span class="pill pill-ok"><span class="dot"></span> Allowed</span></td></tr>
+                <tr><td>05:40:09</td><td>Contract Agent</td><td>Redlined NDA against playbook v7</td><td>iManage / NWND-1180</td><td><span class="pill pill-ok"><span class="dot"></span> Allowed</span></td></tr>
+                <tr><td>04:55:51</td><td>Closing Agent</td><td>Updated 2 conditions precedent</td><td>CP Tracker</td><td><span class="pill pill-ok"><span class="dot"></span> Allowed</span></td></tr>
+                <tr><td>02:14:03</td><td>Diligence Agent</td><td>Attempted read of HALB-0771</td><td>iManage</td><td><span class="pill pill-stop"><span class="dot"></span> Blocked &mdash; wall</span></td></tr>
+                <tr><td>22:02:18</td><td>J. Okafor</td><td>Requested access to matter</td><td>ATLAS-2026</td><td><span class="pill pill-stop"><span class="dot"></span> Blocked &mdash; screen</span></td></tr>
+                <tr><td>21:47:30</td><td>Contract Agent</td><td>Attempted outbound fetch</td><td>Open internet</td><td><span class="pill pill-stop"><span class="dot"></span> Blocked &mdash; no capability</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-note">
+            Blocked attempts are logged as prominently as successful ones. If a regulator, a client audit or the
+            firm's insurer asks what the agent did on this matter, this table is the answer.
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ARCHITECTURE SLIDE-OVER
+     ══════════════════════════════════════════════════════ -->
+<div class="overlay" id="overlay"></div>
+<aside class="arch" id="arch" aria-label="Architecture" aria-hidden="true">
+  <div class="arch-head">
+    <div>
+      <h2>How this is built</h2>
+      <p class="tiny muted" style="margin-top:.2rem;">The legal product on the left, the platform primitive on the right.</p>
+    </div>
+    <button class="btn btn-sm" id="archClose" aria-label="Close architecture panel">Close</button>
+  </div>
+  <div class="arch-body">
+    <p class="small" style="color:var(--slate);">
+      The architecture is borrowed from <a href="https://github.com/cloudflare/cloudflare-os" target="_blank" rel="noopener">Cloudflare&nbsp;OS</a>
+      &mdash; an agent workspace where every user runs their own sandboxed copy of an app, and agents reach the
+      outside world only through narrow, logged, approval-gated connectors.
+    </p>
+    <p class="small" style="color:var(--slate); margin-top:.6rem;">
+      That model happens to fit a law firm almost exactly. Capability-based access is an ethical wall.
+      Human-in-the-loop approval is partner sign-off. An append-only action log is the audit trail a regulator
+      or an insurer will ask for. The mapping below is the whole idea.
+    </p>
+
+    <table class="map-tbl">
+      <thead><tr><th scope="col">Platform primitive</th><th scope="col">What the lawyer sees</th></tr></thead>
+      <tbody>
+        <tr><td>Workspace (Durable Object)</td><td><b>Matter</b> &mdash; one isolated workspace per client matter</td></tr>
+        <tr><td>Gadget (sandboxed worker)</td><td><b>App</b> &mdash; your private copy of a tool, scoped to one matter</td></tr>
+        <tr><td>Blueprint</td><td><b>Practice Template</b> &mdash; share the app, not your data</td></tr>
+        <tr><td>Gatekeeper</td><td><b>Connection</b> &mdash; iManage, Outlook, Slack, DocuSign, 3E</td></tr>
+        <tr><td>Capability-based access<br>(zero ambient authority)</td><td><b>Ethical wall &amp; conflict screen</b> &mdash; enforced at retrieval</td></tr>
+        <tr><td>Human-in-the-loop approval<br>with simulated outcome</td><td><b>Partner approval gate</b> &mdash; see it before it happens</td></tr>
+        <tr><td>Append-only action log</td><td><b>Activity ledger</b> &mdash; privilege and audit trail</td></tr>
+        <tr><td>Sandboxed execution</td><td><b>Confidentiality by construction</b> &mdash; not by good behaviour</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-size:13px; margin-bottom:.4rem;">Why the sandbox matters here</h3>
+    <p class="small" style="color:var(--slate);">
+      A single shared AI assistant with firm-wide access is one prompt away from crossing an ethical wall.
+      Giving every lawyer their own sandboxed instance with nothing but the resources they were explicitly
+      handed makes the bad outcome structurally impossible rather than merely discouraged &mdash; which is the
+      only version a risk partner will sign off.
+    </p>
+
+    <h3 style="font-size:13px; margin:1rem 0 .4rem;">Two senses of &ldquo;abstraction&rdquo;</h3>
+    <p class="small" style="color:var(--slate);">
+      <b>Abstraction</b> (the screen) is the legal one &mdash; reducing a contract to its key terms with a citation
+      for each. <b>Builder</b> is the technical one &mdash; hiding the agent machinery behind blocks a lawyer can
+      rearrange without an engineer. The product needs both: the first is the output they want, the second is
+      the control they need over how it is produced.
+    </p>
+
+    <p class="tiny muted" style="margin-top:1.2rem; padding-top:.8rem; border-top:1px dashed var(--line);">
+      Wireframe only. All matters, clients, counterparties, documents and people shown are fictional.
+    </p>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ══════ SCREEN ROUTING ══════ */
+  const screens  = Array.from(document.querySelectorAll('.screen'));
+  const navItems = Array.from(document.querySelectorAll('.nav-item'));
+  const crumb    = document.getElementById('crumb');
+  const rail     = document.getElementById('rail');
+
+  const show = (name) => {
+    const target = document.getElementById('screen-' + name);
+    if (!target) return;
+
+    screens.forEach(s => { s.hidden = (s !== target); });
+    navItems.forEach(b => b.setAttribute('aria-selected', String(b.dataset.screen === name)));
+
+    const title = (target.dataset.title || '').split('/');
+    crumb.textContent = '';
+    crumb.appendChild(document.createTextNode(title[0] ? title[0].trim() + ' / ' : ''));
+    const b = document.createElement('b');
+    b.textContent = (title[1] || title[0] || '').trim();
+    crumb.appendChild(b);
+
+    rail.classList.remove('open');
+    window.scrollTo({ top: 0, behavior: 'instant' in document.body.style ? 'instant' : 'auto' });
+  };
+
+  navItems.forEach(btn => btn.addEventListener('click', () => show(btn.dataset.screen)));
+
+  // Matter chips in the rail
+  document.querySelectorAll('.matter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.matter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      show(chip.dataset.screen);
+    });
+  });
+
+  // Any [data-goto] anywhere jumps to a screen
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-goto]');
+    if (!link) return;
+    e.preventDefault();
+    show(link.dataset.goto);
+  });
+
+  /* ══════ MOBILE NAV ══════ */
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => {
+    const open = rail.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', String(open));
+  });
+
+  /* ══════ TOAST ══════ */
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  const say = (text) => {
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  };
+
+  /* ══════ APPROVALS ══════ */
+  document.querySelectorAll('[data-approve]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.approval');
+      if (!row || row.classList.contains('is-done')) return;
+      row.classList.add('is-done');
+      say('Approved. Action executed and written to the activity ledger.');
+      const counter = document.querySelector('.nav-item[data-screen="desk"] .nav-count');
+      const left = document.querySelectorAll('.approval:not(.is-done)').length;
+      if (counter) {
+        if (left) { counter.textContent = String(left); }
+        else { counter.remove(); }
+      }
+    });
+  });
+
+  const gateBtn = document.querySelector('[data-approve-gate]');
+  if (gateBtn) {
+    gateBtn.addEventListener('click', () => {
+      const gate = gateBtn.closest('.gate');
+      gate.querySelector('.gate-head').textContent = '✓ Approved by Dana Whitfield · 4 letters sent';
+      gate.style.borderColor = '#bfdccd';
+      gate.style.background = 'var(--ok-sf)';
+      gate.querySelector('.gate-head').style.color = 'var(--ok)';
+      gate.querySelector('.gate-acts').remove();
+      say('4 consent letters sent. CP tracker items 3–6 moved to Requested.');
+    });
+  }
+
+  /* ══════ COMPOSER + SUGGESTIONS ══════ */
+  const input = document.getElementById('composerInput');
+  document.querySelectorAll('.suggest').forEach(s => {
+    s.addEventListener('click', () => {
+      input.value = s.dataset.fill;
+      input.focus();
+    });
+  });
+  const send = () => {
+    if (!input.value.trim()) return;
+    say('Wireframe — the agent is not wired up in this prototype.');
+    input.value = '';
+  };
+  document.getElementById('composerSend').addEventListener('click', send);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+
+  /* ══════ ABSTRACTION TABLE ══════ */
+  const DOCS = {
+    northwind: {
+      title:'Master Supply Agreement', party:'Northwind Industrials plc',
+      flag:'Consent', flagClass:'pill-stop',
+      coc:'Consent of the counterparty required; consent not to be unreasonably withheld.', cocCite:'§14.2',
+      breach:'Termination on 30 days’ notice.', breachCite:'§15.1',
+      value:'£12.4m annual revenue — largest single supply relationship',
+      off:'1 deviation', offClass:'pill-warn',
+      offNote:'Consent right is unqualified in favour of the counterparty on insolvency.',
+      src:'Sunrise DR / 03_Commercial / MSA_Northwind_2023.pdf'
+    },
+    kestrel: {
+      title:'Distribution Agreement', party:'Kestrel Logistics BV',
+      flag:'Consent', flagClass:'pill-stop',
+      coc:'Written consent required for any change in ultimate control.', cocCite:'§9.1',
+      breach:'Immediate termination and repayment of unearned rebates.', breachCite:'§9.6',
+      value:'£4.1m annual revenue · Benelux distribution',
+      off:'On market', offClass:'pill-ok',
+      offNote:'Consistent with firm M&A standards v7.',
+      src:'Sunrise DR / 03_Commercial / Dist_Kestrel_2024.pdf'
+    },
+    caledon: {
+      title:'Facility Agreement', party:'Caledon Bank',
+      flag:'Default', flagClass:'pill-stop',
+      coc:'A change of control is an event of default — not a consent right. Lender may accelerate.', cocCite:'§22.4',
+      breach:'Acceleration of £45m drawn; cross-default to the intercreditor agreement.', breachCite:'§23.2',
+      value:'£45m drawn of £60m facility · matures 30 Jun 2029',
+      off:'2 deviations', offClass:'pill-stop',
+      offNote:'No cure period and no de minimis carve-out. This is the deal’s critical path — waiver or refinancing needed before signing.',
+      src:'Sunrise DR / 05_Finance / Facility_Caledon_2022.pdf'
+    },
+    tanaka: {
+      title:'Joint Venture Agreement', party:'Tanaka Materials KK',
+      flag:'Consent', flagClass:'pill-stop',
+      coc:'JV partner consent required; pre-emption rights triggered over the target’s 51% holding.', cocCite:'§18.3',
+      breach:'Partner may acquire the target’s stake at book value.', breachCite:'§18.7',
+      value:'51% of Sunrise-Tanaka Advanced Materials · carried at £18m',
+      off:'Needs review', offClass:'pill-info',
+      offNote:'Japanese-language original; translation confidence 71%. Recommend local counsel review before relying on this.',
+      src:'Sunrise DR / 02_Corporate / JV_Tanaka_2021.pdf'
+    },
+    vertex: {
+      title:'SaaS Subscription', party:'Vertex Analytics Inc',
+      flag:'Notice', flagClass:'pill-warn',
+      coc:'Written notice within 30 days of completion. No consent right.', cocCite:'§11.5',
+      breach:'Supplier may terminate at the next renewal date.', breachCite:'§13.2',
+      value:'$340k per year · core analytics platform',
+      off:'On market', offClass:'pill-ok',
+      offNote:'Standard vendor position.',
+      src:'Sunrise DR / 07_IT / SaaS_Vertex_2025.pdf'
+    },
+    tower: {
+      title:'Commercial Lease', party:'Sunrise Tower, Floors 8–11',
+      flag:'Notice', flagClass:'pill-warn',
+      coc:'Notice to landlord within 20 working days. Consent needed only for assignment, not a share sale.', cocCite:'§17.2',
+      breach:'Landlord remedy limited to costs.', breachCite:'§17.6',
+      value:'£1.9m annual rent · term to 28 Feb 2034, break 2029',
+      off:'On market', offClass:'pill-ok',
+      offNote:'Ordinary institutional lease terms.',
+      src:'Sunrise DR / 06_Property / Lease_SunriseTower.pdf'
+    },
+    ashfield: {
+      title:'Reseller Agreement', party:'Ashfield Group Ltd',
+      flag:'Needs review', flagClass:'pill-info',
+      coc:'Cannot be determined — clause 12 is illegible in the scanned copy.', cocCite:'§12?',
+      breach:'Unknown.', breachCite:'—',
+      value:'£800k annual revenue · Scottish reseller channel',
+      off:'Needs review', offClass:'pill-info',
+      offNote:'OCR confidence 54%. Request a clean executed copy from the seller before this is relied on.',
+      src:'Sunrise DR / 03_Commercial / Reseller_Ashfield.pdf'
+    },
+    cto: {
+      title:'Service Agreement — CTO', party:'A. Ferreira',
+      flag:'Needs review', flagClass:'pill-info',
+      coc:'Good-leaver treatment triggered on a change of control; accelerated vesting of option award.', cocCite:'§8.6',
+      breach:'Employee may resign with full severance within 6 months.', breachCite:'§8.9',
+      value:'Key person · 12-month notice · retention critical to the deal case',
+      off:'1 deviation', offClass:'pill-warn',
+      offNote:'Double-trigger drafted as single-trigger. Confirm with the client whether retention terms need renegotiating pre-signing.',
+      src:'Sunrise DR / 04_Employment / SA_Ferreira_2023.pdf'
+    }
+  };
+
+  const setDetail = (key) => {
+    const d = DOCS[key];
+    if (!d) return;
+    document.getElementById('detailTitle').textContent = d.title;
+
+    const flag = document.getElementById('detailFlag');
+    flag.className = 'pill ' + d.flagClass;
+    flag.textContent = '';
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    flag.appendChild(dot);
+    flag.appendChild(document.createTextNode(' ' + d.flag));
+
+    document.getElementById('detailParty').textContent = d.party;
+
+    const fill = (id, text, cite, citeTitle) => {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      const span = document.createElement('span');
+      span.textContent = text;
+      el.appendChild(span);
+      if (cite && cite !== '—') {
+        const c = document.createElement('span');
+        c.className = 'cite';
+        c.textContent = cite;
+        c.title = citeTitle || 'Source clause';
+        el.appendChild(c);
+      }
+    };
+
+    fill('detailCoc', d.coc, d.cocCite, 'Change-of-control clause');
+    fill('detailBreach', d.breach, d.breachCite, 'Consequence clause');
+    document.getElementById('detailValue').textContent = d.value;
+    document.getElementById('detailSrc').textContent = d.src;
+
+    const off = document.getElementById('detailOff');
+    off.textContent = '';
+    const offPill = document.createElement('span');
+    offPill.className = 'pill ' + d.offClass;
+    const offDot = document.createElement('span');
+    offDot.className = 'dot';
+    offPill.appendChild(offDot);
+    offPill.appendChild(document.createTextNode(' ' + d.off));
+    const offNote = document.createElement('span');
+    offNote.className = 'tiny muted';
+    offNote.textContent = d.offNote;
+    off.appendChild(offPill);
+    off.appendChild(offNote);
+  };
+
+  const absBody = document.getElementById('absBody');
+  absBody.querySelectorAll('tr').forEach(tr => {
+    tr.addEventListener('click', () => {
+      absBody.querySelectorAll('tr').forEach(r => r.classList.remove('active'));
+      tr.classList.add('active');
+      setDetail(tr.dataset.doc);
+    });
+  });
+
+  /* ══════ BUILDER PALETTE ══════ */
+  const flow = document.getElementById('flow');
+  document.querySelectorAll('.palette-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const [title, desc, tag] = item.dataset.block.split('|');
+
+      const conn = document.createElement('div');
+      conn.className = 'conn';
+
+      const block = document.createElement('div');
+      block.className = 'block block-new' + (tag === 'APPROVAL' ? ' block-gate' : '');
+
+      const ico = document.createElement('span');
+      ico.className = 'block-ico';
+      ico.setAttribute('aria-hidden', 'true');
+      ico.textContent = tag === 'APPROVAL' ? '⚠' : '▣';
+
+      const wrap = document.createElement('span');
+      const t = document.createElement('span');
+      t.className = 'block-t';
+      t.textContent = title;
+      const dsc = document.createElement('span');
+      dsc.className = 'block-d';
+      dsc.textContent = desc;
+      const tg = document.createElement('span');
+      tg.className = 'block-tag';
+      tg.textContent = tag;
+      wrap.appendChild(t); wrap.appendChild(dsc); wrap.appendChild(tg);
+
+      block.appendChild(ico);
+      block.appendChild(wrap);
+      flow.appendChild(conn);
+      flow.appendChild(block);
+
+      block.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      say('Block added to your copy of this workflow.');
+    });
+  });
+
+  /* ══════ ARCHITECTURE PANEL ══════ */
+  const arch    = document.getElementById('arch');
+  const overlay = document.getElementById('overlay');
+  const openArch  = () => { arch.classList.add('open'); overlay.classList.add('show'); arch.setAttribute('aria-hidden','false'); };
+  const closeArch = () => { arch.classList.remove('open'); overlay.classList.remove('show'); arch.setAttribute('aria-hidden','true'); };
+
+  document.getElementById('archOpen').addEventListener('click', openArch);
+  document.getElementById('archClose').addEventListener('click', closeArch);
+  overlay.addEventListener('click', () => { closeArch(); rail.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeArch(); rail.classList.remove('open'); }
+  });
+
+  /* ══════ NON-FUNCTIONAL CONTROLS ══════ */
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn, .select-fake, .app-card, .cap-add');
+    if (!btn) return;
+    if (btn.hasAttribute('data-goto') || btn.hasAttribute('data-approve') ||
+        btn.hasAttribute('data-approve-gate') || btn.closest('.palette-item') ||
+        ['navToggle','archOpen','archClose','composerSend'].includes(btn.id)) return;
+    say('Wireframe — this control is illustrative.');
+  });
+
+})();
+</script>
+</body>
+</html>
