@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "linkedin-skills@linkedin-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "linkedin-skills": {
+      "source": {
+        "source": "github",
+        "repo": "sergebulaev/linkedin-skills"
+      }
+    }
+  }
+}
