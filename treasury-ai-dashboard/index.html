@@ -1,0 +1,921 @@
+<title>Yields &amp; the AI Buildout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+
+<style>
+:root {
+  color-scheme: light;
+  --plane:      #f9f9f7;
+  --surface:    #fcfcfb;
+  --sunk:       #f2f2ee;
+  --ink:        #0b0b0b;
+  --ink-2:      #52514e;
+  --muted:      #898781;
+  --grid:       #e1e0d9;
+  --axis:       #c3c2b7;
+  --rule:       rgba(11,11,11,0.10);
+  --s-tsy:      #2a78d6;
+  --s-ffr:      #eb6834;
+  --s-capex:    #1baf7a;
+  --gap-wash:   rgba(11,11,11,0.055);
+  --pos:        #006300;
+  --neg:        #d03b3b;
+  --shadow:     0 1px 2px rgba(11,11,11,0.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plane:    #0d0d0d;
+    --surface:  #1a1a19;
+    --sunk:     #131312;
+    --ink:      #ffffff;
+    --ink-2:    #c3c2b7;
+    --muted:    #898781;
+    --grid:     #2c2c2a;
+    --axis:     #383835;
+    --rule:     rgba(255,255,255,0.10);
+    --s-tsy:    #3987e5;
+    --s-ffr:    #d95926;
+    --s-capex:  #199e70;
+    --gap-wash: rgba(255,255,255,0.075);
+    --pos:      #0ca30c;
+    --neg:      #e06565;
+    --shadow:   none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane:    #0d0d0d;
+  --surface:  #1a1a19;
+  --sunk:     #131312;
+  --ink:      #ffffff;
+  --ink-2:    #c3c2b7;
+  --muted:    #898781;
+  --grid:     #2c2c2a;
+  --axis:     #383835;
+  --rule:     rgba(255,255,255,0.10);
+  --s-tsy:    #3987e5;
+  --s-ffr:    #d95926;
+  --s-capex:  #199e70;
+  --gap-wash: rgba(255,255,255,0.075);
+  --pos:      #0ca30c;
+  --neg:      #e06565;
+  --shadow:   none;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--plane);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+/* ---------- masthead ---------- */
+.masthead { display: flex; flex-direction: column; gap: 14px; }
+.stamp {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.stamp .live {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--ink-2);
+}
+.stamp .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--s-tsy); display: inline-block;
+}
+h1 {
+  font-family: Archivo, system-ui, sans-serif;
+  font-weight: 700; font-size: clamp(30px, 4.4vw, 46px);
+  line-height: 1.04; letter-spacing: -0.022em;
+  margin: 0; text-wrap: balance; max-width: 20ch;
+}
+.thesis {
+  max-width: 68ch; font-size: 16.5px; color: var(--ink-2); margin: 0;
+}
+.thesis strong { color: var(--ink); font-weight: 500; }
+
+/* ---------- KPI strip ---------- */
+.kpis {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule); border-radius: 3px; overflow: hidden;
+}
+.kpi { background: var(--surface); padding: 16px 18px 15px; display: flex; flex-direction: column; gap: 3px; }
+.kpi .k-label {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+}
+.kpi .k-val {
+  font-family: Archivo, system-ui, sans-serif;
+  font-weight: 600; font-size: 31px; line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.kpi .k-val .unit { font-size: 18px; font-weight: 500; color: var(--ink-2); margin-left: 1px; }
+.kpi .k-note { font-size: 12.5px; color: var(--ink-2); line-height: 1.35; }
+.kpi .k-note b { font-weight: 500; font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.up { color: var(--neg); }   /* rising yields read as pressure, not "good" */
+.dn { color: var(--pos); }
+
+/* ---------- panels ---------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 22px 22px 18px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.p-head { display: flex; flex-direction: column; gap: 5px; }
+.p-head .eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted);
+}
+h2 {
+  font-family: Archivo, system-ui, sans-serif;
+  font-weight: 600; font-size: 20px; letter-spacing: -0.012em;
+  margin: 0; color: var(--ink); text-wrap: balance;
+}
+.p-head p { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); max-width: 74ch; }
+
+/* ---------- charts ---------- */
+.chart-stack { display: flex; flex-direction: column; gap: 4px; }
+.chart-box { position: relative; }
+.chart-box svg { display: block; width: 100%; height: auto; overflow: visible; }
+.legend {
+  display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+  font-size: 12.5px; color: var(--ink-2); padding-left: 2px;
+}
+.lg { display: inline-flex; align-items: center; gap: 6px; }
+.lg .swatch { width: 13px; height: 3px; border-radius: 2px; display: inline-block; }
+.lg .swatch.block { height: 11px; width: 11px; border-radius: 2px; }
+
+.tip {
+  position: absolute; pointer-events: none; opacity: 0;
+  transform: translate(-50%, -100%);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--axis); border-radius: 3px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+  padding: 8px 10px; font-size: 12.5px; line-height: 1.5;
+  white-space: nowrap; z-index: 20; transition: opacity 90ms ease;
+}
+.tip .t-when {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+  display: block; margin-bottom: 3px;
+}
+.tip .t-row { display: flex; align-items: center; gap: 7px; }
+.tip .t-row .sw { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+.tip .t-row .t-v {
+  margin-left: auto; padding-left: 14px;
+  font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-weight: 500;
+}
+
+.chart-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap; padding-top: 2px;
+}
+.tbl-toggle {
+  font-family: "IBM Plex Mono", monospace; font-size: 11px;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  background: none; border: 1px solid var(--axis); border-radius: 3px;
+  color: var(--ink-2); padding: 5px 10px; cursor: pointer;
+}
+.tbl-toggle:hover { background: var(--sunk); color: var(--ink); }
+.tbl-toggle:focus-visible { outline: 2px solid var(--s-tsy); outline-offset: 2px; }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 3px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+caption { text-align: left; padding: 9px 12px; font-size: 12.5px; color: var(--ink-2); background: var(--sunk); }
+th, td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+thead th {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  font-weight: 400; background: var(--sunk);
+}
+tbody tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+td.co { font-weight: 500; }
+.tick-note { font-size: 12px; color: var(--muted); max-width: 62ch; }
+
+/* ---------- transmission chain ---------- */
+.chain { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+.link { background: var(--surface); padding: 15px 15px 16px; display: flex; flex-direction: column; gap: 7px; }
+.link .step {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: 0.09em;
+  color: var(--muted);
+}
+.link h3 {
+  font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 14.5px;
+  margin: 0; letter-spacing: -0.005em; line-height: 1.25;
+}
+.link p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+.link .figure {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
+  color: var(--ink); margin-top: auto; padding-top: 6px;
+}
+.loopback {
+  display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2);
+  background: var(--sunk); border: 1px solid var(--rule); border-radius: 3px; padding: 11px 14px;
+}
+.loopback svg { flex: none; }
+.loopback b { color: var(--ink); font-weight: 500; }
+
+/* ---------- scorecard ---------- */
+.spread { display: grid; grid-template-columns: 1.35fr 1fr; gap: 22px; align-items: start; }
+.stat-rows { display: flex; flex-direction: column; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+.srow { background: var(--surface); padding: 12px 15px; display: flex; align-items: baseline; gap: 12px; }
+.srow .s-lab { font-size: 13px; color: var(--ink-2); line-height: 1.35; }
+.srow .s-val {
+  margin-left: auto; flex: none;
+  font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums;
+  font-size: 15px; font-weight: 500; color: var(--ink);
+}
+
+/* ---------- provenance ---------- */
+.prov { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.prov h3 {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px;
+}
+.prov ul { margin: 0; padding-left: 17px; font-size: 13px; color: var(--ink-2); line-height: 1.6; }
+.prov li { margin-bottom: 4px; }
+.prov code {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px;
+  background: var(--sunk); padding: 1px 5px; border-radius: 2px; color: var(--ink);
+}
+.caveat {
+  border-left: 2px solid var(--s-ffr); padding: 2px 0 2px 14px;
+  font-size: 13.5px; color: var(--ink-2); max-width: 76ch;
+}
+.caveat b { color: var(--ink); font-weight: 500; }
+
+footer {
+  border-top: 1px solid var(--rule); padding-top: 18px;
+  font-size: 12.5px; color: var(--muted); display: flex;
+  flex-wrap: wrap; gap: 8px 20px;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 860px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .chain { grid-template-columns: repeat(2, 1fr); }
+  .spread { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .kpis { grid-template-columns: 1fr; }
+  .chain { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="stamp">
+      <span class="live"><span class="dot"></span>As of 4 Sep 2026</span>
+      <span>&middot;</span>
+      <span>Trailing 24 months</span>
+      <span>&middot;</span>
+      <span>US 10Y CMT &middot; Fed funds &middot; Big-4 capex</span>
+    </div>
+    <h1>Yields and the AI Buildout</h1>
+    <p class="thesis">The Fed has cut <strong>125bp</strong> since September 2024. Over the same
+      window the 10-year Treasury yield rose <strong>~95bp</strong>, to its highest level since
+      November 2023. Big tech is earning more than ever from AI &mdash; and is now issuing enough debt
+      to fund it that it has become part of what sets the long rate it gets discounted at.</p>
+  </header>
+
+  <section class="kpis" aria-label="Headline indicators">
+    <div class="kpi">
+      <span class="k-label">10Y Treasury</span>
+      <span class="k-val">4.76<span class="unit">%</span></span>
+      <span class="k-note"><b class="up">+61bp</b> YTD &middot; highest since Nov 2023</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">Fed funds (upper)</span>
+      <span class="k-val">3.75<span class="unit">%</span></span>
+      <span class="k-note"><b class="dn">&minus;125bp</b> since Sep 2024 &middot; on hold all 2026</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">Big-4 capex, Q2&nbsp;26</span>
+      <span class="k-val">$166<span class="unit">B</span></span>
+      <span class="k-note"><b class="up">+87%</b> YoY &middot; +27% QoQ</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">Mag 7, YTD</span>
+      <span class="k-val">+4.1<span class="unit">%</span></span>
+      <span class="k-note">tracking worst year since 2022</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Exhibit 1 &middot; the divergence</span>
+      <h2>Policy eased at the front end. The long end went the other way.</h2>
+      <p>Both series are annualised percent, plotted on one scale, at month-end. Note the sign
+        change: through late 2024 policy sat <em>above</em> the 10-year &mdash; an inverted curve.
+        It crossed over in December 2024, and the gap has widened in the other direction for most of
+        2026. That gap is term premium: what investors charge for duration risk, on top of the
+        expected path of policy.</p>
+    </div>
+
+    <div class="chart-stack">
+      <div class="chart-box" id="box-rates">
+        <svg id="svg-rates" viewBox="0 0 900 292" role="img"
+             aria-label="Line chart: the 10-year Treasury yield versus the federal funds target upper bound, month-end, September 2024 to September 2026. The 10-year falls to 4.02 percent in November 2025 then climbs to 4.76 percent by September 2026, while the funds rate steps down from 5.00 to 3.75 percent."></svg>
+        <div class="tip" id="tip-rates"></div>
+      </div>
+      <div class="legend">
+        <span class="lg"><span class="swatch" style="background:var(--s-tsy)"></span>10Y Treasury (CMT)</span>
+        <span class="lg"><span class="swatch" style="background:var(--s-ffr)"></span>Fed funds target, upper bound</span>
+        <span class="lg" style="color:var(--muted)">Shaded = gap between the two, either sign</span>
+      </div>
+    </div>
+
+    <div class="chart-foot">
+      <p class="tick-note">Hover or focus the chart for month-by-month values.</p>
+      <button class="tbl-toggle" type="button" data-target="tbl-rates" aria-expanded="false">Show table</button>
+    </div>
+    <div class="tbl-wrap hidden" id="tbl-rates"></div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Exhibit 2 &middot; the other side of the trade</span>
+      <h2>What the money is being spent on</h2>
+      <p>Combined quarterly capital expenditure at Microsoft, Alphabet, Amazon and Meta, on the same
+        time axis as the chart above. Each bar sits at its quarter-end month, so it lines up with the
+        yield reading for that month. The two charts share an x-axis and nothing else &mdash; read the
+        shapes against each other, not a common scale.</p>
+    </div>
+
+    <div class="chart-stack">
+      <div class="chart-box" id="box-capex">
+        <svg id="svg-capex" viewBox="0 0 900 250" role="img"
+             aria-label="Bar chart: combined quarterly capital expenditure for Microsoft, Alphabet, Amazon and Meta, rising from 72.5 billion dollars in Q4 2024 to 166.0 billion dollars in Q2 2026."></svg>
+        <div class="tip" id="tip-capex"></div>
+      </div>
+      <div class="legend">
+        <span class="lg"><span class="swatch block" style="background:var(--s-capex)"></span>Combined capex &mdash; MSFT, GOOGL, AMZN, META ($B/quarter)</span>
+      </div>
+    </div>
+
+    <div class="chart-foot">
+      <p class="tick-note">Bars start at Q4 2024, the first quarter falling wholly inside the
+        window. Q2 2026 is the reported combined figure; Q1 2026 and Q2 2025 are derived from the
+        reported +27% QoQ and +87% YoY changes.</p>
+      <button class="tbl-toggle" type="button" data-target="tbl-capex" aria-expanded="false">Show table</button>
+    </div>
+    <div class="tbl-wrap hidden" id="tbl-capex"></div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Exhibit 3 &middot; mechanism</span>
+      <h2>How AI spending reaches the yield curve &mdash; and comes back</h2>
+      <p>This is the causal chain that connects the three things on this page. It is a loop, not a
+        line: the last step feeds the first.</p>
+    </div>
+
+    <div class="chain">
+      <div class="link">
+        <span class="step">01</span>
+        <h3>Capex outruns cash flow</h3>
+        <p>Spending on GPUs, shells and power now exceeds what operations throw off.</p>
+        <span class="figure">Alphabet Q2&nbsp;26 FCF &minus;$5.9B</span>
+      </div>
+      <div class="link">
+        <span class="step">02</span>
+        <h3>The gap is funded with debt</h3>
+        <p>Hyperscalers moved from occasional issuers to among the largest in the market.</p>
+        <span class="figure">$121B issued 2025 vs $40B 2020</span>
+      </div>
+      <div class="link">
+        <span class="step">03</span>
+        <h3>Supply hits the long end</h3>
+        <p>New high-grade duration competes with Treasuries for the same buyers.</p>
+        <span class="figure">~$570B AI debt expected 2026</span>
+      </div>
+      <div class="link">
+        <span class="step">04</span>
+        <h3>Term premium widens</h3>
+        <p>Investors demand more to hold duration; spreads over Treasuries widen too.</p>
+        <span class="figure">2&ndash;4yr spread 40bp, was 30bp</span>
+      </div>
+      <div class="link">
+        <span class="step">05</span>
+        <h3>Discount rate rises</h3>
+        <p>AI earnings arrive far out in time, so they lose the most present value when rates rise.</p>
+        <span class="figure">30Y at 5.31%, a 19-year high</span>
+      </div>
+    </div>
+
+    <div class="loopback">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M15.5 4.5 A 7 7 0 1 0 17 10" fill="none" stroke="var(--s-ffr)" stroke-width="1.8" stroke-linecap="round"></path>
+        <path d="M11.5 4 L15.8 4.3 L15.2 8.6" fill="none" stroke="var(--s-ffr)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span><b>The loop closes:</b> a higher discount rate raises the cost of the next round of
+        capex financing, which pushes companies to issue more &mdash; or to spend less. Which of those
+        two they choose is the question the 2026 equity market is actually pricing.</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Exhibit 4 &middot; the earnings, in full</span>
+      <h2>The AI cohort is not missing. That is what makes 2026 strange.</h2>
+      <p>June-quarter 2026 results. Cloud growth accelerated at all three hyperscalers and Nvidia beat
+        and raised &mdash; while the group's shares tracked their worst year since 2022.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>Q2 CY2026 results &middot; reported 22&ndash;30 July 2026 (Nvidia, fiscal Q2 FY27, late August)</caption>
+        <thead>
+          <tr>
+            <th scope="col">Company</th>
+            <th scope="col">Revenue</th>
+            <th class="num" scope="col">YoY</th>
+            <th scope="col">AI engine</th>
+            <th scope="col">2026 capex guide</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="co">Alphabet</td>
+            <td class="num">$119.8B</td>
+            <td class="num" style="color:var(--pos)">+24%</td>
+            <td>Google Cloud <b>+82%</b> &middot; backlog $514B</td>
+            <td>$195&ndash;205B <span style="color:var(--muted)">raised</span></td>
+          </tr>
+          <tr>
+            <td class="co">Microsoft</td>
+            <td class="num">$90.0B</td>
+            <td class="num" style="color:var(--pos)">+18%</td>
+            <td>Azure <b>+43%</b> cc &middot; FY26 Azure &gt;$100B</td>
+            <td>~$190B <span style="color:var(--muted)">CY26</span></td>
+          </tr>
+          <tr>
+            <td class="co">Amazon</td>
+            <td class="num">&gt;$200B</td>
+            <td class="num" style="color:var(--muted)">&mdash;</td>
+            <td>AWS <b>+37%</b> &middot; fastest in 18 quarters</td>
+            <td>~$220B <span style="color:var(--muted)">raised</span></td>
+          </tr>
+          <tr>
+            <td class="co">Meta</td>
+            <td class="num" style="color:var(--muted)">&mdash;</td>
+            <td class="num" style="color:var(--muted)">&mdash;</td>
+            <td>Capex $31.1B <b>+83%</b> &middot; FCF $784M</td>
+            <td>$135&ndash;145B <span style="color:var(--muted)">raised</span></td>
+          </tr>
+          <tr>
+            <td class="co">Nvidia</td>
+            <td class="num">$96.2B</td>
+            <td class="num" style="color:var(--muted)">beat $92.1B est</td>
+            <td>Data Center <b>$89.0B</b> &middot; Q3 guide $108B</td>
+            <td><span style="color:var(--muted)">supplier &mdash; n/a</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spread">
+      <div>
+        <p style="margin:0 0 12px; font-size:14px; color:var(--ink-2); max-width:60ch;">
+          Every operating number above accelerated. The share prices did not follow, because the
+          multiple applied to those cash flows fell faster than the cash flows grew. Two things did
+          that: a higher discount rate, and free cash flow turning negative as capex was pulled
+          forward.
+        </p>
+        <p style="margin:0; font-size:14px; color:var(--ink-2); max-width:60ch;">
+          Alphabet's July report &mdash; strong on every operating line, with capex guidance raised
+          &mdash; triggered a sector-wide sell-off. That is the clearest single piece of evidence that
+          the market is now pricing AI spending as a liability to be financed rather than an
+          investment to be rewarded.
+        </p>
+      </div>
+      <div class="stat-rows">
+        <div class="srow"><span class="s-lab">Mag 7 share of S&amp;P 500</span><span class="s-val">32.2%</span></div>
+        <div class="srow"><span class="s-lab">Best YTD &mdash; Apple</span><span class="s-val" style="color:var(--pos)">+20.0%</span></div>
+        <div class="srow"><span class="s-lab">Microsoft, to 13 Jul</span><span class="s-val" style="color:var(--neg)">&minus;20.4%</span></div>
+        <div class="srow"><span class="s-lab">Weakest YTD &mdash; Tesla</span><span class="s-val" style="color:var(--neg)">&minus;20.9%</span></div>
+        <div class="srow"><span class="s-lab">Oracle total debt</span><span class="s-val">$100B</span></div>
+        <div class="srow"><span class="s-lab">2026 Big-4 capex, guided</span><span class="s-val">~$730B</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Reading the dashboard</span>
+      <h2>What would change the picture</h2>
+    </div>
+    <div class="prov">
+      <div>
+        <h3>Watch next</h3>
+        <ul>
+          <li><b>FOMC, 15&ndash;16 Sep 2026.</b> Three members dissented in July preferring a
+            <i>hike</i>. A hawkish turn moves the front end up to meet the long end.</li>
+          <li><b>Q3 capex guidance.</b> Microsoft's FY27 guide of $255&ndash;260B is the single
+            largest number in the complex.</li>
+          <li><b>Issuance calendar.</b> Roughly $334B of the expected 2026 AI debt had not yet
+            priced as of end-May.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What breaks the loop</h3>
+        <ul>
+          <li><b>Capex discipline.</b> One major hyperscaler guiding spending down would relieve
+            both the FCF drain and the issuance pipeline.</li>
+          <li><b>Inflation cooling.</b> It is elevated inflation, not growth, keeping the Fed on
+            hold; a downside surprise lets the front end fall.</li>
+          <li><b>AI revenue catching capex.</b> The gap between the two is the whole bear case.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="caveat"><b>Read this as a relationship map, not a live terminal.</b> Correlation across
+      24 monthly observations does not establish causation, and the capex-to-yields channel described
+      in Exhibit 3 is one mechanism among several &mdash; fiscal deficits and inflation expectations
+      also carry term premium. The chart shows the two series moving apart; the mechanism is the
+      argued explanation for it.</p>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Provenance</span>
+      <h2>Where every number came from</h2>
+    </div>
+    <div class="prov">
+      <div>
+        <h3>Verified from published reports</h3>
+        <ul>
+          <li>All 2026 month-end 10Y readings (Feb&ndash;Sep), and Oct 2025.</li>
+          <li>Every figure in Exhibits 3 and 4, and both stat columns.</li>
+          <li>The full Fed funds path &mdash; all eight 2026 meetings held at 3.50&ndash;3.75%.</li>
+          <li>Q2 2026 combined capex of $166.0B, +87% YoY, +27% QoQ.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Reconstructed &mdash; refresh to replace</h3>
+        <ul>
+          <li>Month-end 10Y for Sep 2024 &ndash; Jan 2026, from period reporting and anchored to
+            verified readings. Treat as approximate to <code>&plusmn;5bp</code>.</li>
+          <li>Quarterly capex before Q1 2026, apportioned from reported annual totals.</li>
+          <li>Run <code>python3 refresh_data.py</code> from the repo on a machine with network
+            access to overwrite both series with official FRED <code>DGS10</code> and
+            <code>DFEDTARU</code> data.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Sources: Federal Reserve H.15 &amp; FOMC statements &middot; company earnings releases and
+      8-Ks &middot; Advisor Perspectives &middot; CNBC &middot; Bloomberg &middot; Morgan Stanley
+      issuance estimates &middot; Morningstar</span>
+    <span>Yields are annualised percent, constant maturity. Capex in USD billions.</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------------ data */
+
+  var MONTHS = ["Sep 24","Oct 24","Nov 24","Dec 24","Jan 25","Feb 25","Mar 25","Apr 25",
+                "May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25",
+                "Jan 26","Feb 26","Mar 26","Apr 26","May 26","Jun 26","Jul 26","Aug 26","Sep 26"];
+
+  /* 10-year Treasury constant maturity, month-end close, percent */
+  var TSY = [3.81,4.29,4.18,4.58,4.58,4.24,4.23,4.17,4.41,4.24,4.37,4.23,
+             4.16,4.11,4.02,4.15,4.15,4.04,4.38,4.30,4.47,4.44,4.75,4.73,4.76];
+
+  /* Federal funds target range, upper bound, month-end, percent */
+  var FFR = [5.00,5.00,4.75,4.50,4.50,4.50,4.50,4.50,4.50,4.50,4.50,4.50,
+             4.25,4.00,4.00,3.75,3.75,3.75,3.75,3.75,3.75,3.75,3.75,3.75,3.75];
+
+  /* Combined quarterly capex, MSFT + GOOGL + AMZN + META, $B.
+     Index is the position on the MONTHS axis of that quarter's final month. */
+  var CAPEX = [
+    { i: 3,  q: "Q4 2024", v: 72.5,  src: "apportioned" },
+    { i: 6,  q: "Q1 2025", v: 78.6,  src: "apportioned" },
+    { i: 9,  q: "Q2 2025", v: 88.8,  src: "derived from +87% YoY" },
+    { i: 12, q: "Q3 2025", v: 99.4,  src: "apportioned" },
+    { i: 15, q: "Q4 2025", v: 124.9, src: "apportioned" },
+    { i: 18, q: "Q1 2026", v: 130.7, src: "derived from +27% QoQ" },
+    { i: 21, q: "Q2 2026", v: 166.0, src: "reported" }
+  ];
+
+  var N = MONTHS.length;
+  var X0 = 56, X1 = 876;
+  var xAt = function (i) { return X0 + i * ((X1 - X0) / (N - 1)); };
+  var SVGNS = "http://www.w3.org/2000/svg";
+
+  function el(name, attrs, text) {
+    var n = document.createElementNS(SVGNS, name);
+    for (var k in attrs) { if (attrs[k] !== null) n.setAttribute(k, attrs[k]); }
+    if (text !== undefined) { n.textContent = text; }
+    return n;
+  }
+  function fmtPct(v) { return v.toFixed(2) + "%"; }
+  function fmtBn(v) { return "$" + v.toFixed(1) + "B"; }
+
+  /* ------------------------------------------------------- exhibit 1: rates */
+
+  var RY0 = 20, RY1 = 240, RLO = 3.5, RHI = 5.1;
+  var ry = function (v) { return RY1 - (v - RLO) * ((RY1 - RY0) / (RHI - RLO)); };
+
+  function drawRates() {
+    var svg = document.getElementById("svg-rates");
+    var g = document.createDocumentFragment();
+
+    /* spread band between the two series */
+    var band = "M" + xAt(0) + " " + ry(TSY[0]);
+    var k;
+    for (k = 1; k < N; k++) { band += " L" + xAt(k) + " " + ry(TSY[k]); }
+    for (k = N - 1; k >= 0; k--) { band += " L" + xAt(k) + " " + ry(FFR[k]); }
+    band += " Z";
+    g.appendChild(el("path", { d: band, fill: "var(--gap-wash)", stroke: "none" }));
+
+    /* gridlines + y ticks */
+    [3.5, 4.0, 4.5, 5.0].forEach(function (v) {
+      g.appendChild(el("line", {
+        x1: X0, x2: X1, y1: ry(v), y2: ry(v),
+        stroke: "var(--grid)", "stroke-width": 1, fill: "none"
+      }));
+      g.appendChild(el("text", {
+        x: X0 - 11, y: ry(v) + 4, "text-anchor": "end",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, v.toFixed(1) + "%"));
+    });
+
+    /* x ticks every 3 months */
+    for (k = 0; k < N; k += 3) {
+      g.appendChild(el("text", {
+        x: xAt(k), y: RY1 + 20, "text-anchor": "middle",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, MONTHS[k]));
+    }
+    g.appendChild(el("line", {
+      x1: X0, x2: X1, y1: RY1, y2: RY1, stroke: "var(--axis)", "stroke-width": 1, fill: "none"
+    }));
+
+    /* funds rate: a step function, drawn as steps */
+    var stepD = "M" + xAt(0) + " " + ry(FFR[0]);
+    for (k = 1; k < N; k++) {
+      stepD += " L" + xAt(k) + " " + ry(FFR[k - 1]) + " L" + xAt(k) + " " + ry(FFR[k]);
+    }
+    g.appendChild(el("path", {
+      d: stepD, fill: "none", stroke: "var(--s-ffr)",
+      "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"
+    }));
+
+    /* 10-year */
+    var lineD = "";
+    for (k = 0; k < N; k++) { lineD += (k ? " L" : "M") + xAt(k) + " " + ry(TSY[k]); }
+    g.appendChild(el("path", {
+      d: lineD, fill: "none", stroke: "var(--s-tsy)",
+      "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"
+    }));
+
+    /* endpoint emphasis + direct labels */
+    g.appendChild(el("circle", {
+      cx: xAt(N - 1), cy: ry(TSY[N - 1]), r: 4.5,
+      fill: "var(--s-tsy)", stroke: "var(--surface)", "stroke-width": 2
+    }));
+    g.appendChild(el("text", {
+      x: xAt(N - 1) - 6, y: ry(TSY[N - 1]) - 12, "text-anchor": "end",
+      fill: "var(--s-tsy)", "font-size": 12.5, "font-weight": 600,
+      "font-family": "Archivo, sans-serif"
+    }, "4.76%"));
+    g.appendChild(el("text", {
+      x: xAt(N - 1) - 6, y: ry(FFR[N - 1]) + 19, "text-anchor": "end",
+      fill: "var(--s-ffr)", "font-size": 12.5, "font-weight": 600,
+      "font-family": "Archivo, sans-serif"
+    }, "3.75%"));
+
+    /* the trough, which is the pivot of the whole story */
+    var t = 14;
+    g.appendChild(el("circle", {
+      cx: xAt(t), cy: ry(TSY[t]), r: 3.5,
+      fill: "var(--surface)", stroke: "var(--s-tsy)", "stroke-width": 2
+    }));
+    g.appendChild(el("text", {
+      x: xAt(t), y: ry(TSY[t]) + 24, "text-anchor": "middle",
+      fill: "var(--ink-2)", "font-size": 11,
+      "font-family": "'IBM Plex Mono', monospace"
+    }, "4.02% low"));
+
+    /* crosshair layer */
+    var cross = el("line", {
+      x1: 0, x2: 0, y1: RY0, y2: RY1, stroke: "var(--axis)",
+      "stroke-width": 1, opacity: 0, fill: "none"
+    });
+    var d1 = el("circle", { r: 4, fill: "var(--s-tsy)", stroke: "var(--surface)", "stroke-width": 2, opacity: 0, cx: 0, cy: 0 });
+    var d2 = el("circle", { r: 4, fill: "var(--s-ffr)", stroke: "var(--surface)", "stroke-width": 2, opacity: 0, cx: 0, cy: 0 });
+    g.appendChild(cross); g.appendChild(d1); g.appendChild(d2);
+
+    var hit = el("rect", {
+      x: X0 - 12, y: RY0, width: (X1 - X0) + 24, height: RY1 - RY0,
+      fill: "transparent", tabindex: "0", role: "application",
+      "aria-label": "Rates chart, use arrow keys to step through months"
+    });
+    g.appendChild(hit);
+    svg.appendChild(g);
+
+    var tip = document.getElementById("tip-rates");
+    var box = document.getElementById("box-rates");
+    var cur = -1;
+
+    function show(i) {
+      if (i < 0 || i >= N) { return; }
+      cur = i;
+      var px = xAt(i);
+      cross.setAttribute("x1", px); cross.setAttribute("x2", px); cross.setAttribute("opacity", 1);
+      d1.setAttribute("cx", px); d1.setAttribute("cy", ry(TSY[i])); d1.setAttribute("opacity", 1);
+      d2.setAttribute("cx", px); d2.setAttribute("cy", ry(FFR[i])); d2.setAttribute("opacity", 1);
+
+      var spread = (TSY[i] - FFR[i]) * 100;
+      tip.innerHTML =
+        '<span class="t-when">' + MONTHS[i] + ' &middot; month-end</span>' +
+        '<div class="t-row"><span class="sw" style="background:var(--s-tsy)"></span>10Y Treasury' +
+          '<span class="t-v">' + fmtPct(TSY[i]) + '</span></div>' +
+        '<div class="t-row"><span class="sw" style="background:var(--s-ffr)"></span>Fed funds (upper)' +
+          '<span class="t-v">' + fmtPct(FFR[i]) + '</span></div>' +
+        '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>Spread' +
+          '<span class="t-v">' + (spread >= 0 ? "+" : "") + spread.toFixed(0) + 'bp</span></div>';
+
+      var r = box.getBoundingClientRect();
+      var scale = r.width / 900;
+      tip.style.left = (px * scale) + "px";
+      tip.style.top  = (Math.min(ry(TSY[i]), ry(FFR[i])) * scale - 14) + "px";
+      tip.style.opacity = 1;
+    }
+    function hide() {
+      cross.setAttribute("opacity", 0);
+      d1.setAttribute("opacity", 0); d2.setAttribute("opacity", 0);
+      tip.style.opacity = 0; cur = -1;
+    }
+    function fromEvent(ev) {
+      var r = box.getBoundingClientRect();
+      var vx = (ev.clientX - r.left) * (900 / r.width);
+      var i = Math.round((vx - X0) / ((X1 - X0) / (N - 1)));
+      show(Math.max(0, Math.min(N - 1, i)));
+    }
+    hit.addEventListener("mousemove", fromEvent);
+    hit.addEventListener("mouseleave", hide);
+    hit.addEventListener("focus", function () { show(cur < 0 ? N - 1 : cur); });
+    hit.addEventListener("blur", hide);
+    hit.addEventListener("keydown", function (ev) {
+      if (ev.key === "ArrowRight") { show(Math.min(N - 1, (cur < 0 ? 0 : cur + 1))); ev.preventDefault(); }
+      else if (ev.key === "ArrowLeft") { show(Math.max(0, (cur < 0 ? N - 1 : cur - 1))); ev.preventDefault(); }
+      else if (ev.key === "Escape") { hide(); }
+    });
+  }
+
+  /* ------------------------------------------------------- exhibit 2: capex */
+
+  var CY0 = 20, CY1 = 198, CMAX = 180, BW = 62;
+  var cy = function (v) { return CY1 - (v / CMAX) * (CY1 - CY0); };
+
+  function drawCapex() {
+    var svg = document.getElementById("svg-capex");
+    var g = document.createDocumentFragment();
+
+    [0, 60, 120, 180].forEach(function (v) {
+      g.appendChild(el("line", {
+        x1: X0, x2: X1, y1: cy(v), y2: cy(v),
+        stroke: v === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1, fill: "none"
+      }));
+      g.appendChild(el("text", {
+        x: X0 - 11, y: cy(v) + 4, "text-anchor": "end",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, "$" + v + "B"));
+    });
+
+    var tip = document.getElementById("tip-capex");
+    var box = document.getElementById("box-capex");
+
+    CAPEX.forEach(function (d, n) {
+      var px = xAt(d.i), h = cy(0) - cy(d.v);
+      var bar = el("rect", {
+        x: px - BW / 2, y: cy(d.v), width: BW, height: h,
+        rx: 4, ry: 4, fill: "var(--s-capex)"
+      });
+      /* square off the baseline end: a 4px radius only belongs on the data end */
+      var foot = el("rect", {
+        x: px - BW / 2, y: cy(d.v) + h - 6, width: BW, height: 6, fill: "var(--s-capex)"
+      });
+      g.appendChild(bar); g.appendChild(foot);
+
+      /* label the first and last bars only - the axis and tooltip carry the rest */
+      if (n === 0 || n === CAPEX.length - 1) {
+        g.appendChild(el("text", {
+          x: px, y: cy(d.v) - 9, "text-anchor": "middle",
+          fill: "var(--ink)", "font-size": 12.5, "font-weight": 600,
+          "font-family": "Archivo, sans-serif"
+        }, fmtBn(d.v)));
+      }
+      g.appendChild(el("text", {
+        x: px, y: CY1 + 20, "text-anchor": "middle",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, d.q));
+
+      var hit = el("rect", {
+        x: px - BW / 2 - 8, y: CY0, width: BW + 16, height: CY1 - CY0,
+        fill: "transparent"
+      });
+      hit.addEventListener("mouseenter", function () {
+        bar.setAttribute("opacity", 0.82); foot.setAttribute("opacity", 0.82);
+        tip.innerHTML =
+          '<span class="t-when">' + d.q + '</span>' +
+          '<div class="t-row"><span class="sw" style="background:var(--s-capex)"></span>Combined capex' +
+            '<span class="t-v">' + fmtBn(d.v) + '</span></div>' +
+          '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>' +
+            d.src + '</div>';
+        var r = box.getBoundingClientRect(), scale = r.width / 900;
+        tip.style.left = (px * scale) + "px";
+        tip.style.top  = (cy(d.v) * scale - 10) + "px";
+        tip.style.opacity = 1;
+      });
+      hit.addEventListener("mouseleave", function () {
+        bar.removeAttribute("opacity"); foot.removeAttribute("opacity");
+        tip.style.opacity = 0;
+      });
+      g.appendChild(hit);
+    });
+
+    svg.appendChild(g);
+  }
+
+  /* ------------------------------------------------------------ table views */
+
+  function buildTables() {
+    var r = ['<table><caption>10-year Treasury yield and federal funds target upper bound, month-end, percent</caption>',
+             '<thead><tr><th scope="col">Month</th><th class="num" scope="col">10Y</th>',
+             '<th class="num" scope="col">Fed funds</th><th class="num" scope="col">Spread</th></tr></thead><tbody>'];
+    for (var i = 0; i < N; i++) {
+      var sp = (TSY[i] - FFR[i]) * 100;
+      r.push('<tr><td>' + MONTHS[i] + '</td><td class="num">' + TSY[i].toFixed(2) +
+             '</td><td class="num">' + FFR[i].toFixed(2) + '</td><td class="num">' +
+             (sp >= 0 ? "+" : "") + sp.toFixed(0) + 'bp</td></tr>');
+    }
+    r.push('</tbody></table>');
+    document.getElementById("tbl-rates").innerHTML = r.join("");
+
+    var c = ['<table><caption>Combined quarterly capital expenditure, Microsoft + Alphabet + Amazon + Meta, USD billions</caption>',
+             '<thead><tr><th scope="col">Quarter</th><th class="num" scope="col">Capex</th>',
+             '<th scope="col">Basis</th></tr></thead><tbody>'];
+    CAPEX.forEach(function (d) {
+      c.push('<tr><td>' + d.q + '</td><td class="num">' + d.v.toFixed(1) + '</td><td>' + d.src + '</td></tr>');
+    });
+    c.push('</tbody></table>');
+    document.getElementById("tbl-capex").innerHTML = c.join("");
+  }
+
+  function wireToggles() {
+    var btns = document.querySelectorAll(".tbl-toggle");
+    Array.prototype.forEach.call(btns, function (b) {
+      b.addEventListener("click", function () {
+        var t = document.getElementById(b.getAttribute("data-target"));
+        var open = !t.classList.contains("hidden");
+        t.classList.toggle("hidden", open);
+        b.setAttribute("aria-expanded", String(!open));
+        b.textContent = open ? "Show table" : "Hide table";
+      });
+    });
+  }
+
+  drawRates();
+  drawCapex();
+  buildTables();
+  wireToggles();
+})();
+</script>
