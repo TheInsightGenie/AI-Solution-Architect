@@ -385,16 +385,28 @@ footer {
       </div>
     </div>
 
-    <p class="caveat" style="border-color:var(--s-capex)"><b>The ratio barely moves.</b> Across
-      seven quarters Nvidia's data-centre line has held at roughly half of Big-4 capex &mdash; 49%,
-      50%, 46%, 52%, 50%, 58%, 54% &mdash; even as the absolute numbers more than doubled. The two
-      series are not independent readings of the AI boom. They are largely the same dollars, counted
-      once as spending and once as revenue.</p>
+    <p class="caveat" style="border-color:var(--s-capex)"><b>The ratio barely moves.</b> Plotted on
+      its own below, against a zero baseline so the flatness is real and not an artefact of a
+      cropped axis. The two series are not independent readings of the AI boom &mdash; they are
+      largely the same dollars, counted once as spending and once as revenue.</p>
+
+    <div class="chart-stack">
+      <div class="chart-box" id="box-ratio">
+        <svg id="svg-ratio" viewBox="0 0 900 200" role="img"
+             aria-label="Line chart: Nvidia data-centre revenue as a percentage of combined Big-4 capex, holding between 46 and 58 percent across seven quarters, mean 51 percent."></svg>
+        <div class="tip" id="tip-ratio"></div>
+      </div>
+      <div class="legend">
+        <span class="lg" style="color:var(--muted)">Nvidia data-centre revenue as a share of Big-4 capex, by quarter</span>
+      </div>
+    </div>
 
     <div class="chart-foot">
       <p class="tick-note">Bars start at Q4 2024, the first quarter falling wholly inside the
         window. Nvidia's figures are as reported. Q2 2026 capex is the reported combined figure;
-        Q1 2026 and Q2 2025 are derived from the reported +27% QoQ and +87% YoY changes.</p>
+        Q1 2026 and Q2 2025 are derived from the reported +27% QoQ and +87% YoY changes &mdash; so
+        the 58% reading in Q1 2026, the one visible excursion, rests on a derived denominator and
+        should not be read as a genuine step up in Nvidia's share.</p>
       <button class="tbl-toggle" type="button" data-target="tbl-capex" aria-expanded="false">Show table</button>
     </div>
     <div class="tbl-wrap hidden" id="tbl-capex"></div>
@@ -940,6 +952,95 @@ footer {
     svg.appendChild(g);
   }
 
+  /* ------------------------------ exhibit 2b: Nvidia as a share of capex */
+
+  var RT0 = 18, RT1 = 150, RTMAX = 70;
+  var rty = function (v) { return RT1 - (v / RTMAX) * (RT1 - RT0); };
+
+  function drawRatio() {
+    var svg = document.getElementById("svg-ratio");
+    var tip = document.getElementById("tip-ratio");
+    var box = document.getElementById("box-ratio");
+    var g = document.createDocumentFragment();
+
+    var pts = CAPEX.map(function (d) {
+      return { i: d.i, q: d.q, pct: (d.nv / d.v) * 100, derived: d.src.indexOf("derived") === 0 };
+    });
+    var mean = pts.reduce(function (s, p) { return s + p.pct; }, 0) / pts.length;
+
+    [0, 25, 50].forEach(function (v) {
+      g.appendChild(el("line", {
+        x1: X0, x2: X1, y1: rty(v), y2: rty(v),
+        stroke: v === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1, fill: "none"
+      }));
+      g.appendChild(el("text", {
+        x: X0 - 11, y: rty(v) + 4, "text-anchor": "end",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, v + "%"));
+    });
+
+    /* mean reference, labelled in the empty run before the first quarter */
+    g.appendChild(el("line", {
+      x1: X0, x2: X1, y1: rty(mean), y2: rty(mean),
+      stroke: "var(--muted)", "stroke-width": 1, opacity: 0.6, fill: "none"
+    }));
+    g.appendChild(el("text", {
+      x: X0 + 4, y: rty(mean) - 7, "text-anchor": "start",
+      fill: "var(--muted)", "font-size": 10.5,
+      "font-family": "'IBM Plex Mono', monospace"
+    }, "mean " + mean.toFixed(0) + "%"));
+
+    var d = "";
+    pts.forEach(function (p, n) { d += (n ? " L" : "M") + xAt(p.i) + " " + rty(p.pct); });
+    g.appendChild(el("path", {
+      d: d, fill: "none", stroke: "var(--s-nvda)", "stroke-width": 2,
+      "stroke-linejoin": "round", "stroke-linecap": "round"
+    }));
+
+    pts.forEach(function (p, n) {
+      var px = xAt(p.i);
+      /* hollow marker where the denominator is derived rather than reported */
+      g.appendChild(el("circle", {
+        cx: px, cy: rty(p.pct), r: 4.5,
+        fill: p.derived ? "var(--surface)" : "var(--s-nvda)",
+        stroke: p.derived ? "var(--s-nvda)" : "var(--surface)", "stroke-width": 2
+      }));
+      if (n === 0 || n === pts.length - 1) {
+        g.appendChild(el("text", {
+          x: px, y: rty(p.pct) - 13, "text-anchor": "middle",
+          fill: "var(--ink)", "font-size": 12, "font-weight": 600,
+          "font-family": "Archivo, sans-serif"
+        }, p.pct.toFixed(0) + "%"));
+      }
+      g.appendChild(el("text", {
+        x: px, y: RT1 + 20, "text-anchor": "middle",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, p.q));
+
+      var hit = el("rect", {
+        x: px - 34, y: RT0, width: 68, height: RT1 - RT0, fill: "transparent"
+      });
+      hit.addEventListener("mouseenter", function () {
+        tip.innerHTML =
+          '<span class="t-when">' + p.q + '</span>' +
+          '<div class="t-row"><span class="sw" style="background:var(--s-nvda)"></span>Nvidia share of capex' +
+            '<span class="t-v">' + p.pct.toFixed(1) + '%</span></div>' +
+          '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>' +
+            (p.derived ? "denominator derived" : "denominator reported") + '</div>';
+        var r = box.getBoundingClientRect(), scale = r.width / 900;
+        tip.style.left = (px * scale) + "px";
+        tip.style.top  = (rty(p.pct) * scale - 10) + "px";
+        tip.style.opacity = 1;
+      });
+      hit.addEventListener("mouseleave", function () { tip.style.opacity = 0; });
+      g.appendChild(hit);
+    });
+
+    svg.appendChild(g);
+  }
+
   /* ------------------------------------------------ exhibit 3: per-company */
 
   var FX0 = 104, FX1 = 812, FMAX = 240;
@@ -1084,6 +1185,7 @@ footer {
 
   drawRates();
   drawCapex();
+  drawRatio();
   drawFirms();
   buildTables();
   wireToggles();
