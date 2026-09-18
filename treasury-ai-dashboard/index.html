@@ -18,6 +18,7 @@
   --s-tsy:      #2a78d6;
   --s-ffr:      #eb6834;
   --s-capex:    #1baf7a;
+  --s-nvda:     #0d6e4c;
   --gap-wash:   rgba(11,11,11,0.055);
   --pos:        #006300;
   --neg:        #d03b3b;
@@ -38,6 +39,7 @@
     --s-tsy:    #3987e5;
     --s-ffr:    #d95926;
     --s-capex:  #199e70;
+    --s-nvda:   #6ddbb0;
     --gap-wash: rgba(255,255,255,0.075);
     --pos:      #0ca30c;
     --neg:      #e06565;
@@ -58,6 +60,7 @@
   --s-tsy:    #3987e5;
   --s-ffr:    #d95926;
   --s-capex:  #199e70;
+  --s-nvda:   #6ddbb0;
   --gap-wash: rgba(255,255,255,0.075);
   --pos:      #0ca30c;
   --neg:      #e06565;
@@ -361,11 +364,12 @@ footer {
   <section class="panel">
     <div class="p-head">
       <span class="eyebrow">Exhibit 2 &middot; the other side of the trade</span>
-      <h2>What the money is being spent on</h2>
+      <h2>What the money is being spent on &mdash; and where about half of it lands</h2>
       <p>Combined quarterly capital expenditure at Microsoft, Alphabet, Amazon and Meta, on the same
-        time axis as the chart above. Each bar sits at its quarter-end month, so it lines up with the
-        yield reading for that month. The two charts share an x-axis and nothing else &mdash; read the
-        shapes against each other, not a common scale.</p>
+        time axis as the chart above, with Nvidia's data-centre revenue beside it. Both are dollars
+        per quarter on one scale, so the pairing is a like-for-like comparison, not a rescaled
+        overlay. Nvidia's fiscal quarters close a month after the calendar quarter; each pair is
+        matched on the period, not the reporting date.</p>
     </div>
 
     <div class="chart-stack">
@@ -375,14 +379,22 @@ footer {
         <div class="tip" id="tip-capex"></div>
       </div>
       <div class="legend">
-        <span class="lg"><span class="swatch block" style="background:var(--s-capex)"></span>Combined capex &mdash; MSFT, GOOGL, AMZN, META ($B/quarter)</span>
+        <span class="lg"><span class="swatch block" style="background:var(--s-capex)"></span>Combined capex &mdash; MSFT, GOOGL, AMZN, META</span>
+        <span class="lg"><span class="swatch block" style="background:var(--s-nvda)"></span>Nvidia data-centre revenue</span>
+        <span class="lg" style="color:var(--muted)">USD billions per quarter</span>
       </div>
     </div>
 
+    <p class="caveat" style="border-color:var(--s-capex)"><b>The ratio barely moves.</b> Across
+      seven quarters Nvidia's data-centre line has held at roughly half of Big-4 capex &mdash; 49%,
+      50%, 46%, 52%, 50%, 58%, 54% &mdash; even as the absolute numbers more than doubled. The two
+      series are not independent readings of the AI boom. They are largely the same dollars, counted
+      once as spending and once as revenue.</p>
+
     <div class="chart-foot">
       <p class="tick-note">Bars start at Q4 2024, the first quarter falling wholly inside the
-        window. Q2 2026 is the reported combined figure; Q1 2026 and Q2 2025 are derived from the
-        reported +27% QoQ and +87% YoY changes.</p>
+        window. Nvidia's figures are as reported. Q2 2026 capex is the reported combined figure;
+        Q1 2026 and Q2 2025 are derived from the reported +27% QoQ and +87% YoY changes.</p>
       <button class="tbl-toggle" type="button" data-target="tbl-capex" aria-expanded="false">Show table</button>
     </div>
     <div class="tbl-wrap hidden" id="tbl-capex"></div>
@@ -390,7 +402,36 @@ footer {
 
   <section class="panel">
     <div class="p-head">
-      <span class="eyebrow">Exhibit 3 &middot; mechanism</span>
+      <span class="eyebrow">Exhibit 3 &middot; who is committing what</span>
+      <h2>Not one outlier. All four roughly doubled at once.</h2>
+      <p>Full-year capital expenditure, 2025 actual against 2026 guidance at the midpoint. The
+        simultaneity is the point: this is not one company making a contrarian bet that the others
+        can underwrite, it is the whole group committing together, which is what makes the financing
+        need show up in the bond market as a single wave rather than a series of small ones.</p>
+    </div>
+
+    <div class="chart-box" id="box-firms">
+      <svg id="svg-firms" viewBox="0 0 900 244" role="img"
+           aria-label="Dumbbell chart: full-year capital expenditure per company, 2025 actual versus 2026 guided midpoint. Amazon 125 to 220 billion, Alphabet 91 to 200, Microsoft 90 to 190, Meta 72 to 140 billion dollars."></svg>
+      <div class="tip" id="tip-firms"></div>
+    </div>
+    <div class="legend">
+      <span class="lg"><span class="swatch block" style="background:var(--muted);border-radius:50%"></span>2025 actual</span>
+      <span class="lg"><span class="swatch block" style="background:var(--s-capex);border-radius:50%"></span>2026 guided, midpoint</span>
+    </div>
+
+    <div class="chart-foot">
+      <p class="tick-note">Guidance midpoints: Alphabet $195&ndash;205B, Meta $135&ndash;145B. Amazon
+        and Microsoft guide to a single figure. Alphabet's 2025 actual is reported between $85B and
+        $91B across sources; the higher figure is used here.</p>
+      <button class="tbl-toggle" type="button" data-target="tbl-firms" aria-expanded="false">Show table</button>
+    </div>
+    <div class="tbl-wrap hidden" id="tbl-firms"></div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head">
+      <span class="eyebrow">Exhibit 4 &middot; mechanism</span>
       <h2>How AI spending reaches the yield curve &mdash; and comes back</h2>
       <p>This is the causal chain that connects the three things on this page. It is a loop, not a
         line: the last step feeds the first.</p>
@@ -442,7 +483,7 @@ footer {
 
   <section class="panel">
     <div class="p-head">
-      <span class="eyebrow">Exhibit 4 &middot; the earnings, in full</span>
+      <span class="eyebrow">Exhibit 5 &middot; the earnings, in full</span>
       <h2>The AI cohort is not missing. That is what makes 2026 strange.</h2>
       <p>June-quarter 2026 results. Cloud growth accelerated at all three hyperscalers and Nvidia beat
         and raised &mdash; while the group's shares tracked their worst year since 2022.</p>
@@ -556,7 +597,7 @@ footer {
     </div>
     <p class="caveat"><b>Read this as a relationship map, not a live terminal.</b> Correlation across
       24 monthly observations does not establish causation, and the capex-to-yields channel described
-      in Exhibit 3 is one mechanism among several &mdash; fiscal deficits and inflation expectations
+      in Exhibit 4 is one mechanism among several &mdash; fiscal deficits and inflation expectations
       also carry term premium. The chart shows the two series moving apart; the mechanism is the
       argued explanation for it.</p>
   </section>
@@ -619,14 +660,25 @@ footer {
 
   /* Combined quarterly capex, MSFT + GOOGL + AMZN + META, $B.
      Index is the position on the MONTHS axis of that quarter's final month. */
+  /* `nv` is Nvidia data-centre revenue for the matching period. Nvidia's fiscal
+     quarters close a month after the calendar quarter, so Q4 2024 here pairs with
+     its Q4 FY25 (Nov 2024 - Jan 2025). All Nvidia figures are as reported. */
   var CAPEX = [
-    { i: 3,  q: "Q4 2024", v: 72.5,  src: "apportioned" },
-    { i: 6,  q: "Q1 2025", v: 78.6,  src: "apportioned" },
-    { i: 9,  q: "Q2 2025", v: 88.8,  src: "derived from +87% YoY" },
-    { i: 12, q: "Q3 2025", v: 99.4,  src: "apportioned" },
-    { i: 15, q: "Q4 2025", v: 124.9, src: "apportioned" },
-    { i: 18, q: "Q1 2026", v: 130.7, src: "derived from +27% QoQ" },
-    { i: 21, q: "Q2 2026", v: 166.0, src: "reported" }
+    { i: 3,  q: "Q4 2024", v: 72.5,  nv: 35.6, nq: "Q4 FY25", src: "apportioned" },
+    { i: 6,  q: "Q1 2025", v: 78.6,  nv: 39.0, nq: "Q1 FY26", src: "apportioned" },
+    { i: 9,  q: "Q2 2025", v: 88.8,  nv: 41.1, nq: "Q2 FY26", src: "derived from +87% YoY" },
+    { i: 12, q: "Q3 2025", v: 99.4,  nv: 51.2, nq: "Q3 FY26", src: "apportioned" },
+    { i: 15, q: "Q4 2025", v: 124.9, nv: 62.3, nq: "Q4 FY26", src: "apportioned" },
+    { i: 18, q: "Q1 2026", v: 130.7, nv: 75.2, nq: "Q1 FY27", src: "derived from +27% QoQ" },
+    { i: 21, q: "Q2 2026", v: 166.0, nv: 89.0, nq: "Q2 FY27", src: "reported" }
+  ];
+
+  /* Full-year capex per company: 2025 actual vs 2026 guided midpoint, $B */
+  var FIRMS = [
+    { name: "Amazon",    a: 125, b: 220, guide: "~$220B" },
+    { name: "Alphabet",  a: 91,  b: 200, guide: "$195-205B" },
+    { name: "Microsoft", a: 90,  b: 190, guide: "~$190B" },
+    { name: "Meta",      a: 72,  b: 140, guide: "$135-145B" }
   ];
 
   var N = MONTHS.length;
@@ -800,7 +852,7 @@ footer {
 
   /* ------------------------------------------------------- exhibit 2: capex */
 
-  var CY0 = 20, CY1 = 198, CMAX = 180, BW = 62;
+  var CY0 = 20, CY1 = 198, CMAX = 180, BW = 30, BGAP = 2;
   var cy = function (v) { return CY1 - (v / CMAX) * (CY1 - CY0); };
 
   function drawCapex() {
@@ -822,25 +874,34 @@ footer {
     var tip = document.getElementById("tip-capex");
     var box = document.getElementById("box-capex");
 
-    CAPEX.forEach(function (d, n) {
-      var px = xAt(d.i), h = cy(0) - cy(d.v);
-      var bar = el("rect", {
-        x: px - BW / 2, y: cy(d.v), width: BW, height: h,
-        rx: 4, ry: 4, fill: "var(--s-capex)"
-      });
-      /* square off the baseline end: a 4px radius only belongs on the data end */
-      var foot = el("rect", {
-        x: px - BW / 2, y: cy(d.v) + h - 6, width: BW, height: 6, fill: "var(--s-capex)"
-      });
-      g.appendChild(bar); g.appendChild(foot);
+    /* one bar with a 4px radius on the data end only, squared off at the baseline */
+    function bar(x, v, fill) {
+      var grp = el("g", {});
+      var h = cy(0) - cy(v);
+      grp.appendChild(el("rect", { x: x, y: cy(v), width: BW, height: h, rx: 4, ry: 4, fill: fill }));
+      grp.appendChild(el("rect", { x: x, y: cy(v) + h - 6, width: BW, height: 6, fill: fill }));
+      return grp;
+    }
 
-      /* label the first and last bars only - the axis and tooltip carry the rest */
+    CAPEX.forEach(function (d, n) {
+      var px = xAt(d.i);
+      var xa = px - BW - BGAP / 2, xb = px + BGAP / 2;
+      var ba = bar(xa, d.v, "var(--s-capex)");
+      var bb = bar(xb, d.nv, "var(--s-nvda)");
+      g.appendChild(ba); g.appendChild(bb);
+
+      /* label the first and last pair only - the axis and tooltip carry the rest */
       if (n === 0 || n === CAPEX.length - 1) {
         g.appendChild(el("text", {
-          x: px, y: cy(d.v) - 9, "text-anchor": "middle",
-          fill: "var(--ink)", "font-size": 12.5, "font-weight": 600,
+          x: xa + BW / 2, y: cy(d.v) - 9, "text-anchor": "middle",
+          fill: "var(--ink)", "font-size": 12, "font-weight": 600,
           "font-family": "Archivo, sans-serif"
         }, fmtBn(d.v)));
+        g.appendChild(el("text", {
+          x: xb + BW / 2, y: cy(d.nv) - 9, "text-anchor": "middle",
+          fill: "var(--ink-2)", "font-size": 12, "font-weight": 600,
+          "font-family": "Archivo, sans-serif"
+        }, fmtBn(d.nv)));
       }
       g.appendChild(el("text", {
         x: px, y: CY1 + 20, "text-anchor": "middle",
@@ -849,16 +910,20 @@ footer {
       }, d.q));
 
       var hit = el("rect", {
-        x: px - BW / 2 - 8, y: CY0, width: BW + 16, height: CY1 - CY0,
+        x: xa - 8, y: CY0, width: BW * 2 + BGAP + 16, height: CY1 - CY0,
         fill: "transparent"
       });
       hit.addEventListener("mouseenter", function () {
-        bar.setAttribute("opacity", 0.82); foot.setAttribute("opacity", 0.82);
+        ba.setAttribute("opacity", 0.82); bb.setAttribute("opacity", 0.82);
         tip.innerHTML =
-          '<span class="t-when">' + d.q + '</span>' +
+          '<span class="t-when">' + d.q + ' &middot; Nvidia ' + d.nq + '</span>' +
           '<div class="t-row"><span class="sw" style="background:var(--s-capex)"></span>Combined capex' +
             '<span class="t-v">' + fmtBn(d.v) + '</span></div>' +
-          '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>' +
+          '<div class="t-row"><span class="sw" style="background:var(--s-nvda)"></span>Nvidia data centre' +
+            '<span class="t-v">' + fmtBn(d.nv) + '</span></div>' +
+          '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>Nvidia as % of capex' +
+            '<span class="t-v">' + Math.round((d.nv / d.v) * 100) + '%</span></div>' +
+          '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>capex basis: ' +
             d.src + '</div>';
         var r = box.getBoundingClientRect(), scale = r.width / 900;
         tip.style.left = (px * scale) + "px";
@@ -866,9 +931,98 @@ footer {
         tip.style.opacity = 1;
       });
       hit.addEventListener("mouseleave", function () {
-        bar.removeAttribute("opacity"); foot.removeAttribute("opacity");
+        ba.removeAttribute("opacity"); bb.removeAttribute("opacity");
         tip.style.opacity = 0;
       });
+      g.appendChild(hit);
+    });
+
+    svg.appendChild(g);
+  }
+
+  /* ------------------------------------------------ exhibit 3: per-company */
+
+  var FX0 = 104, FX1 = 812, FMAX = 240;
+  var fx = function (v) { return FX0 + (v / FMAX) * (FX1 - FX0); };
+
+  function drawFirms() {
+    var svg = document.getElementById("svg-firms");
+    var tip = document.getElementById("tip-firms");
+    var box = document.getElementById("box-firms");
+    var g = document.createDocumentFragment();
+    var rowH = 46, top = 28;
+
+    [0, 60, 120, 180, 240].forEach(function (v) {
+      g.appendChild(el("line", {
+        x1: fx(v), x2: fx(v), y1: top - 12, y2: top + FIRMS.length * rowH - 16,
+        stroke: "var(--grid)", "stroke-width": 1, fill: "none"
+      }));
+      g.appendChild(el("text", {
+        x: fx(v), y: top + FIRMS.length * rowH + 2, "text-anchor": "middle",
+        fill: "var(--muted)", "font-size": 11,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, "$" + v + "B"));
+    });
+
+    FIRMS.forEach(function (d) {
+      var y = top + FIRMS.indexOf(d) * rowH;
+
+      g.appendChild(el("text", {
+        x: FX0 - 16, y: y + 5, "text-anchor": "end",
+        fill: "var(--ink)", "font-size": 13.5, "font-weight": 600,
+        "font-family": "Archivo, sans-serif"
+      }, d.name));
+
+      /* the connector carries the magnitude of the jump */
+      g.appendChild(el("line", {
+        x1: fx(d.a), x2: fx(d.b), y1: y, y2: y,
+        stroke: "var(--s-capex)", "stroke-width": 3,
+        "stroke-linecap": "round", opacity: 0.32, fill: "none"
+      }));
+      g.appendChild(el("circle", {
+        cx: fx(d.a), cy: y, r: 6,
+        fill: "var(--surface)", stroke: "var(--muted)", "stroke-width": 2
+      }));
+      g.appendChild(el("circle", {
+        cx: fx(d.b), cy: y, r: 6.5, fill: "var(--s-capex)",
+        stroke: "var(--surface)", "stroke-width": 2
+      }));
+
+      g.appendChild(el("text", {
+        x: fx(d.a) - 13, y: y + 4, "text-anchor": "end",
+        fill: "var(--ink-2)", "font-size": 12,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, "$" + d.a + "B"));
+      g.appendChild(el("text", {
+        x: fx(d.b) + 14, y: y + 4, "text-anchor": "start",
+        fill: "var(--ink)", "font-size": 12.5, "font-weight": 600,
+        "font-family": "Archivo, sans-serif"
+      }, "$" + d.b + "B"));
+      g.appendChild(el("text", {
+        x: fx(d.b) + 14, y: y + 19, "text-anchor": "start",
+        fill: "var(--muted)", "font-size": 10.5,
+        "font-family": "'IBM Plex Mono', monospace"
+      }, "+" + Math.round(((d.b - d.a) / d.a) * 100) + "%"));
+
+      var hit = el("rect", {
+        x: FX0 - 96, y: y - rowH / 2 + 4, width: (FX1 - FX0) + 180, height: rowH - 6,
+        fill: "transparent"
+      });
+      hit.addEventListener("mouseenter", function () {
+        tip.innerHTML =
+          '<span class="t-when">' + d.name + ' &middot; full-year capex</span>' +
+          '<div class="t-row"><span class="sw" style="background:var(--muted)"></span>2025 actual' +
+            '<span class="t-v">$' + d.a + 'B</span></div>' +
+          '<div class="t-row"><span class="sw" style="background:var(--s-capex)"></span>2026 guided' +
+            '<span class="t-v">' + d.guide + '</span></div>' +
+          '<div class="t-row" style="color:var(--muted)"><span class="sw" style="background:transparent"></span>Change' +
+            '<span class="t-v">+' + Math.round(((d.b - d.a) / d.a) * 100) + '%</span></div>';
+        var r = box.getBoundingClientRect(), scale = r.width / 900;
+        tip.style.left = (fx((d.a + d.b) / 2) * scale) + "px";
+        tip.style.top  = ((y - 12) * scale) + "px";
+        tip.style.opacity = 1;
+      });
+      hit.addEventListener("mouseleave", function () { tip.style.opacity = 0; });
       g.appendChild(hit);
     });
 
@@ -890,14 +1044,29 @@ footer {
     r.push('</tbody></table>');
     document.getElementById("tbl-rates").innerHTML = r.join("");
 
-    var c = ['<table><caption>Combined quarterly capital expenditure, Microsoft + Alphabet + Amazon + Meta, USD billions</caption>',
+    var c = ['<table><caption>Combined quarterly capex (MSFT + GOOGL + AMZN + META) and Nvidia data-centre revenue, USD billions</caption>',
              '<thead><tr><th scope="col">Quarter</th><th class="num" scope="col">Capex</th>',
-             '<th scope="col">Basis</th></tr></thead><tbody>'];
+             '<th scope="col">Nvidia period</th><th class="num" scope="col">Nvidia DC</th>',
+             '<th class="num" scope="col">Ratio</th><th scope="col">Capex basis</th></tr></thead><tbody>'];
     CAPEX.forEach(function (d) {
-      c.push('<tr><td>' + d.q + '</td><td class="num">' + d.v.toFixed(1) + '</td><td>' + d.src + '</td></tr>');
+      c.push('<tr><td>' + d.q + '</td><td class="num">' + d.v.toFixed(1) +
+             '</td><td>' + d.nq + '</td><td class="num">' + d.nv.toFixed(1) +
+             '</td><td class="num">' + Math.round((d.nv / d.v) * 100) + '%</td><td>' + d.src + '</td></tr>');
     });
     c.push('</tbody></table>');
     document.getElementById("tbl-capex").innerHTML = c.join("");
+
+    var f = ['<table><caption>Full-year capital expenditure by company, 2025 actual vs 2026 guidance, USD billions</caption>',
+             '<thead><tr><th scope="col">Company</th><th class="num" scope="col">2025 actual</th>',
+             '<th scope="col">2026 guidance</th><th class="num" scope="col">Midpoint</th>',
+             '<th class="num" scope="col">Change</th></tr></thead><tbody>'];
+    FIRMS.forEach(function (d) {
+      f.push('<tr><td class="co">' + d.name + '</td><td class="num">' + d.a +
+             '</td><td>' + d.guide + '</td><td class="num">' + d.b +
+             '</td><td class="num">+' + Math.round(((d.b - d.a) / d.a) * 100) + '%</td></tr>');
+    });
+    f.push('</tbody></table>');
+    document.getElementById("tbl-firms").innerHTML = f.join("");
   }
 
   function wireToggles() {
@@ -915,6 +1084,7 @@ footer {
 
   drawRates();
   drawCapex();
+  drawFirms();
   buildTables();
   wireToggles();
 })();
